@@ -30,6 +30,8 @@ RUN mkdir -p /var/lib/headplane/agent
 FROM --platform=$BUILDPLATFORM node:24-slim AS js-base
 WORKDIR /run
 
+# Let Corepack's Node fetch use the proxy passed to the build.
+ENV NODE_USE_ENV_PROXY=1
 RUN corepack enable
 COPY patches ./patches
 COPY package.json pnpm-lock.yaml build.sh ./

@@ -1,5 +1,9 @@
 # Next
 
+## Fixes
+
+- Docker builds now let Corepack use the configured HTTP proxy when downloading pnpm.
+
 ## Changes
 
 - Set English and Chinese organization names with HEADPLANE_ORGANIZATION_NAME_EN and HEADPLANE_ORGANIZATION_NAME_ZH; the header and browser tab follow language changes immediately.
