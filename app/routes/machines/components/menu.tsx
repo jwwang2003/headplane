@@ -4,6 +4,7 @@ import { useSubmit } from "react-router";
 
 import Button from "~/components/button";
 import { Menu, MenuContent, MenuItem, MenuSeparator, MenuTrigger } from "~/components/menu";
+import { T, useI18n } from "~/i18n/provider";
 import type { User } from "~/types";
 import cn from "~/utils/cn";
 import { isNoExpiry, type PopulatedNode } from "~/utils/node-info";
@@ -38,6 +39,7 @@ export default function MachineMenu({
   supportsNodeOwnerChange,
   supportsDisablingKeyExpiry,
 }: MenuProps) {
+  const { t } = useI18n();
   const submit = useSubmit();
   const [modal, setModal] = useState<Modal>(null);
   const supportsTailscaleSSH = node.hostInfo?.sshHostKeys && node.hostInfo?.sshHostKeys.length > 0;
@@ -152,14 +154,18 @@ export default function MachineMenu({
           {isFullButton ? (
             <>
               <Cog className="h-5" />
-              <p>Machine Settings</p>
+              <p>
+                <T text={"Machine Settings"} />
+              </p>
             </>
           ) : (
             <Ellipsis className="h-5" />
           )}
         </MenuTrigger>
         <MenuContent>
-          <MenuItem onClick={() => setModal("rename")}>Edit machine name</MenuItem>
+          <MenuItem onClick={() => setModal("rename")}>
+            <T text={"Edit machine name"} />
+          </MenuItem>
           {supportsDisablingKeyExpiry && (
             <MenuItem
               onClick={() =>
@@ -173,22 +179,28 @@ export default function MachineMenu({
                 )
               }
             >
-              {isNoExpiry(node.expiry) ? "Enable" : "Disable"} key expiry
+              {isNoExpiry(node.expiry) ? t("Enable") : t("Disable")} <T text={"key expiry"} />
             </MenuItem>
           )}
-          <MenuItem onClick={() => setModal("routes")}>Edit route settings</MenuItem>
-          <MenuItem onClick={() => setModal("tags")}>Edit ACL tags</MenuItem>
+          <MenuItem onClick={() => setModal("routes")}>
+            <T text={"Edit route settings"} />
+          </MenuItem>
+          <MenuItem onClick={() => setModal("tags")}>
+            <T text={"Edit ACL tags"} />
+          </MenuItem>
           {supportsNodeOwnerChange && (
-            <MenuItem onClick={() => setModal("move")}>Change owner</MenuItem>
+            <MenuItem onClick={() => setModal("move")}>
+              <T text={"Change owner"} />
+            </MenuItem>
           )}
           <MenuSeparator />
           {!isNoExpiry(node.expiry) && (
             <MenuItem variant="danger" disabled={node.expired} onClick={() => setModal("expire")}>
-              Expire
+              <T text={"Expire"} />
             </MenuItem>
           )}
           <MenuItem variant="danger" onClick={() => setModal("remove")}>
-            Remove
+            <T text={"Remove"} />
           </MenuItem>
         </MenuContent>
       </Menu>

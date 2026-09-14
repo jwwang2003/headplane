@@ -10,6 +10,7 @@ import { ExpiryTag } from "~/components/tags/Expiry";
 import { HeadplaneAgentTag } from "~/components/tags/HeadplaneAgent";
 import { SubnetTag } from "~/components/tags/Subnet";
 import { TailscaleSSHTag } from "~/components/tags/TailscaleSSH";
+import { T, useI18n } from "~/i18n/provider";
 import type { User } from "~/types";
 import cn from "~/utils/cn";
 import * as hinfo from "~/utils/host-info";
@@ -41,6 +42,7 @@ export default function MachineRow({
   supportsNodeOwnerChange,
   supportsDisablingKeyExpiry,
 }: Props) {
+  const { t, locale } = useI18n();
   const uiTags = useMemo(() => uiTagsForNode(node, isAgent), [node, isAgent]);
 
   const ipOptions = useMemo(() => {
@@ -65,7 +67,7 @@ export default function MachineRow({
             {node.givenName}
           </p>
           <p className="text-sm opacity-50">
-            {node.user ? getUserDisplayName(node.user) : "Tag-owned"}
+            {node.user ? getUserDisplayName(node.user) : t("Tag-owned")}
           </p>
           <div className="mt-1.5 flex flex-wrap gap-1">
             {mapTagsToComponents(node, uiTags)}
@@ -114,7 +116,9 @@ export default function MachineRow({
               </p>
             </>
           ) : (
-            <p className="text-sm opacity-50">Unknown</p>
+            <p className="text-sm opacity-50">
+              <T text={"Unknown"} />
+            </p>
           )}
         </td>
       ) : undefined}
@@ -127,12 +131,15 @@ export default function MachineRow({
               suppressHydrationWarning
             >
               {node.online && !node.expired
-                ? "Connected"
-                : new Date(node.lastSeen).toLocaleString()}
+                ? t("Connected")
+                : new Date(node.lastSeen).toLocaleString(locale, {
+                    timeZone: "UTC",
+                    timeZoneName: "short",
+                  })}
             </p>
             {!(node.online && !node.expired) && (
               <p className="text-xs opacity-50" suppressHydrationWarning>
-                {formatTimeDelta(new Date(node.lastSeen))}
+                {formatTimeDelta(new Date(node.lastSeen), locale)}
               </p>
             )}
           </div>

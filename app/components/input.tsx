@@ -3,6 +3,7 @@ import { Input as BaseInput } from "@base-ui/react/input";
 import { Asterisk } from "lucide-react";
 import type { ComponentProps } from "react";
 
+import { useI18n } from "~/i18n/provider";
 import cn from "~/utils/cn";
 
 export interface InputProps extends Omit<ComponentProps<typeof BaseInput>, "onChange"> {
@@ -17,6 +18,7 @@ export interface InputProps extends Omit<ComponentProps<typeof BaseInput>, "onCh
 }
 
 export default function Input(props: InputProps) {
+  const { t } = useI18n();
   const {
     label,
     labelHidden,
@@ -64,7 +66,7 @@ export default function Input(props: InputProps) {
       )}
       {invalid && errorMessage ? (
         <Field.Error className={cn("text-xs", "text-red-500 dark:text-red-400")}>
-          {errorMessage}
+          {t(errorMessage)}
         </Field.Error>
       ) : null}
     </Field.Root>

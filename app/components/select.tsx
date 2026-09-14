@@ -1,6 +1,7 @@
 import { Combobox } from "@base-ui/react/combobox";
 import { Check, ChevronDown } from "lucide-react";
 
+import { T } from "~/i18n/provider";
 import cn from "~/utils/cn";
 
 export interface SelectItem {
@@ -103,7 +104,7 @@ export default function Select({
               )}
             >
               <Combobox.Empty className="px-3 py-2 text-sm text-mist-500 empty:hidden">
-                No results found.
+                <T text={"No results found."} />
               </Combobox.Empty>
               <Combobox.List>
                 {(item: SelectItem) => (

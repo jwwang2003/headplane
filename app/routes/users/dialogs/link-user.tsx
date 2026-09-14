@@ -2,6 +2,7 @@ import Dialog, { DialogPanel } from "~/components/dialog";
 import Notice from "~/components/notice";
 import Text from "~/components/text";
 import Title from "~/components/title";
+import { T } from "~/i18n/provider";
 import cn from "~/utils/cn";
 
 interface LinkUserProps {
@@ -24,13 +25,20 @@ export default function LinkUser({
   return (
     <Dialog isOpen={isOpen} onOpenChange={setIsOpen}>
       <DialogPanel>
-        <Title>Link Headscale user for {displayName}</Title>
+        <Title>
+          <T text={"Link Headscale user for"} /> {displayName}
+        </Title>
         <Text className="mb-6">
-          Select which Headscale user this identity should be linked to. This controls which
-          machines they can manage and enables self-service features.
+          <T
+            text={
+              "Select which Headscale user this identity should be linked to. This controls which machines they can manage and enables self-service features."
+            }
+          />
         </Text>
         {headscaleUsers.length === 0 ? (
-          <Notice>All Headscale users are already linked to other accounts.</Notice>
+          <Notice>
+            <T text={"All Headscale users are already linked to other accounts."} />
+          </Notice>
         ) : (
           <>
             <input name="action_id" type="hidden" value="link_user" />
@@ -45,11 +53,18 @@ export default function LinkUser({
               name="headscale_user_id"
               required
             >
-              <option value="">Select a Headscale user...</option>
+              <option value="">
+                <T text={"Select a Headscale user..."} />
+              </option>
               {headscaleUsers.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.name}
-                  {u.id === currentLink ? " (current)" : ""}
+                  {u.id === currentLink ? (
+                    <>
+                      {" "}
+                      <T text="(current)" />
+                    </>
+                  ) : null}
                 </option>
               ))}
             </select>

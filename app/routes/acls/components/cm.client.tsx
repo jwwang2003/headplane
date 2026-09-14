@@ -4,6 +4,8 @@ import { BookCopy, CircleX } from "lucide-react";
 import Merge from "react-codemirror-merge";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { T } from "~/i18n/provider";
+
 import { headplaneTheme } from "./theme";
 
 interface EditorProps {
@@ -19,7 +21,9 @@ export function Editor(props: EditorProps) {
         fallback={
           <div className="flex flex-col items-center gap-2.5 py-8">
             <CircleX />
-            <p className="text-lg font-semibold">Failed to load the editor.</p>
+            <p className="text-lg font-semibold">
+              <T text={"Failed to load the editor."} />
+            </p>
           </div>
         }
       >
@@ -49,7 +53,9 @@ export function Differ(props: DifferProps) {
       {props.left === props.right ? (
         <div className="flex flex-col items-center gap-2.5 py-8">
           <BookCopy />
-          <p className="text-lg font-semibold">No changes</p>
+          <p className="text-lg font-semibold">
+            <T text={"No changes"} />
+          </p>
         </div>
       ) : (
         <div className="h-editor">
@@ -57,7 +63,9 @@ export function Differ(props: DifferProps) {
             fallback={
               <div className="flex flex-col items-center gap-2.5 py-8">
                 <CircleX />
-                <p className="text-lg font-semibold">Failed to load the editor.</p>
+                <p className="text-lg font-semibold">
+                  <T text={"Failed to load the editor."} />
+                </p>
               </div>
             }
           >

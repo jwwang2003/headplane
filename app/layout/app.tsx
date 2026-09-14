@@ -2,6 +2,7 @@ import { Outlet, redirect, type ShouldRevalidateFunction } from "react-router";
 
 import { ErrorBanner } from "~/components/error-banner";
 import StatusBanner from "~/components/status-banner";
+import { T, useI18n } from "~/i18n/provider";
 import {
   appConfigContext,
   authContext,
@@ -117,6 +118,7 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 }
 
 export default function AppLayout({ loaderData }: Route.ComponentProps) {
+  const { t } = useI18n();
   return (
     <>
       <Header
@@ -129,11 +131,14 @@ export default function AppLayout({ loaderData }: Route.ComponentProps) {
           <StatusBanner
             className="mb-4"
             dismissable={false}
-            title="Headscale Unreachable"
+            title={t("Headscale Unreachable")}
             variant="critical"
           >
-            Unable to connect to the Headscale server. Data shown may be stale and changes cannot be
-            saved until the connection is restored.
+            <T
+              text={
+                "Unable to connect to the Headscale server. Data shown may be stale and changes cannot be saved until the connection is restored."
+              }
+            />
           </StatusBanner>
         )}
         <Outlet />

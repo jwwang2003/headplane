@@ -8,6 +8,8 @@ import {
   unstable_useRoute as useRoute,
 } from "react-router";
 
+import { getLocale } from "~/i18n/locale";
+import { I18nProvider, LanguageSwitcher, useI18n } from "~/i18n/provider";
 import { LiveDataProvider } from "~/utils/live-data";
 import ToastProvider from "~/utils/toast-provider";
 
@@ -28,19 +30,29 @@ export const meta: MetaFunction = () => [
 
 export async function loader({ request }: Route.LoaderArgs) {
   const colorScheme = await getColorScheme(request);
-  return { colorScheme };
+  return { colorScheme, locale: getLocale(request) };
 }
 
 export function Layout({ children }: { readonly children: React.ReactNode }) {
   const { loaderData } = useRoute("root");
 
+  return (
+    <I18nProvider initialLocale={loaderData?.locale ?? "en"}>
+      <Document>{children}</Document>
+    </I18nProvider>
+  );
+}
+
+function Document({ children }: { readonly children: React.ReactNode }) {
+  const { loaderData } = useRoute("root");
+  const { locale } = useI18n();
   // LiveDataProvider is wrapped at the top level since dialogs and things
   // that control its state are usually open in portal containers which
   // are not a part of the normal React tree.
   return (
     <LiveDataProvider>
       <html
-        lang="en"
+        lang={locale}
         className={
           loaderData?.colorScheme === "dark"
             ? "dark"
@@ -58,6 +70,9 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
         </head>
         <body className="w-full overflow-x-hidden overscroll-none dark:bg-mist-900 dark:text-mist-50">
           {children}
+          <div className="fixed right-4 bottom-4 z-50">
+            <LanguageSwitcher />
+          </div>
           <ToastProvider />
           <ScrollRestoration />
           <Scripts />

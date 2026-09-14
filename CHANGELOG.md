@@ -1,5 +1,9 @@
 # Next
 
+## Changes
+
+- Choose English or Simplified Chinese from the language selector on any page. Headplane remembers your preference across login, navigation, and reloads; administration pages, dialogs, and authentication notices update immediately.
+
 # 0.7.1 (August 27, 2026)
 
 ## Changes

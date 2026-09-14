@@ -8,6 +8,7 @@ import Select from "~/components/select";
 import Text from "~/components/text";
 import Title from "~/components/title";
 import { useForm } from "~/hooks/use-form";
+import { T, useI18n } from "~/i18n/provider";
 
 const recordSchema = type({
   record_type: "'A' | 'AAAA'",
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export default function AddRecord({ records }: Props) {
+  const { t } = useI18n();
   const form = useForm({
     schema: recordSchema,
     defaultValues: { record_type: "A" },
@@ -48,15 +50,21 @@ export default function AddRecord({ records }: Props) {
 
   return (
     <Dialog>
-      <Button>Add DNS record</Button>
+      <Button>
+        <T text={"Add DNS record"} />
+      </Button>
       <DialogPanel onSubmit={() => form.reset()}>
-        <Title>Add DNS record</Title>
-        <Text>Enter the domain and IP address for the new DNS record.</Text>
+        <Title>
+          <T text={"Add DNS record"} />
+        </Title>
+        <Text>
+          <T text={"Enter the domain and IP address for the new DNS record."} />
+        </Text>
         <div className="mt-4 flex flex-col gap-2">
           <input type="hidden" name="action_id" value="add_record" />
           <Select
             required
-            label="Record Type"
+            label={t("Record Type")}
             name="record_type"
             defaultValue={recordType}
             onValueChange={(v) => {
@@ -70,19 +78,19 @@ export default function AddRecord({ records }: Props) {
           <Input
             {...form.field("record_name")}
             required
-            label="Domain"
+            label={t("Domain")}
             placeholder="test.example.com"
           />
           <Input
             {...form.field("record_value")}
             required
-            label="IP Address"
+            label={t("IP Address")}
             placeholder={recordType === "AAAA" ? "2001:db8::ff00:42:8329" : "101.101.101.101"}
           />
           {isDuplicate ? (
             <p className="text-sm opacity-50">
-              A record with the domain name <Code>{name}</Code> and IP address <Code>{ip}</Code>{" "}
-              already exists.
+              <T text={"A record with the domain name"} /> <Code>{name}</Code>{" "}
+              <T text={"and IP address"} /> <Code>{ip}</Code> <T text={"already exists."} />
             </p>
           ) : undefined}
         </div>

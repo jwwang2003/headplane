@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 import PageError from "~/components/page-error";
+import { T, useI18n } from "~/i18n/provider";
 import {
   appConfigContext,
   authContext,
@@ -158,10 +159,15 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 export const action = userAction;
 
 export default function Page({ loaderData }: Route.ComponentProps) {
+  const { t } = useI18n();
   return (
     <>
-      <h1 className="mb-1.5 text-2xl font-medium">Users</h1>
-      <p className="text-md mb-8">Manage the users in your network and their permissions.</p>
+      <h1 className="mb-1.5 text-2xl font-medium">
+        <T text={"Users"} />
+      </h1>
+      <p className="text-md mb-8">
+        <T text={"Manage the users in your network and their permissions."} />
+      </p>
       <ManageBanner isDisabled={!loaderData.writable} oidc={loaderData.oidc} />
 
       {loaderData.apiError && (
@@ -172,27 +178,39 @@ export default function Page({ loaderData }: Route.ComponentProps) {
             "dark:border-red-800 dark:bg-red-950 dark:text-red-200",
           )}
         >
-          <p className="text-sm">{loaderData.apiError}</p>
+          <p className="text-sm">{t(loaderData.apiError)}</p>
         </div>
       )}
 
       <section>
-        <h2 className="mb-3 text-lg font-medium">Headplane Users</h2>
+        <h2 className="mb-3 text-lg font-medium">
+          <T text={"Headplane Users"} />
+        </h2>
         {loaderData.headplaneUsers.length === 0 ? (
           <p className="text-sm text-mist-600 dark:text-mist-300">
-            No users have signed into Headplane yet.
+            <T text={"No users have signed into Headplane yet."} />
           </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] table-auto rounded-lg">
               <thead className="text-mist-600 dark:text-mist-300">
                 <tr className="px-0.5 text-left">
-                  <th className="pb-2 text-xs font-bold uppercase">User</th>
-                  <th className="pb-2 text-xs font-bold uppercase">Role</th>
-                  <th className="pb-2 text-xs font-bold uppercase">Last Login</th>
-                  <th className="pb-2 text-xs font-bold uppercase">Status</th>
+                  <th className="pb-2 text-xs font-bold uppercase">
+                    <T text={"User"} />
+                  </th>
+                  <th className="pb-2 text-xs font-bold uppercase">
+                    <T text={"Role"} />
+                  </th>
+                  <th className="pb-2 text-xs font-bold uppercase">
+                    <T text={"Last Login"} />
+                  </th>
+                  <th className="pb-2 text-xs font-bold uppercase">
+                    <T text={"Status"} />
+                  </th>
                   <th className="w-12 pb-2">
-                    <span className="sr-only">Actions</span>
+                    <span className="sr-only">
+                      <T text={"Actions"} />
+                    </span>
                   </th>
                 </tr>
               </thead>
@@ -219,20 +237,33 @@ export default function Page({ loaderData }: Route.ComponentProps) {
 
       {!loaderData.apiError && loaderData.unlinkedHeadscaleUsers.length > 0 && (
         <section className="mt-10">
-          <h2 className="mb-1 text-lg font-medium">Unlinked Headscale Users</h2>
+          <h2 className="mb-1 text-lg font-medium">
+            <T text={"Unlinked Headscale Users"} />
+          </h2>
           <p className="mb-3 text-sm text-mist-600 dark:text-mist-300">
-            These Headscale users are not linked to a Headplane account and cannot be managed
-            through Headplane.
+            <T
+              text={
+                "These Headscale users are not linked to a Headplane account and cannot be managed through Headplane."
+              }
+            />
           </p>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] table-auto rounded-lg">
               <thead className="text-mist-600 dark:text-mist-300">
                 <tr className="px-0.5 text-left">
-                  <th className="pb-2 text-xs font-bold uppercase">User</th>
-                  <th className="pb-2 text-xs font-bold uppercase">Created At</th>
-                  <th className="pb-2 text-xs font-bold uppercase">Status</th>
+                  <th className="pb-2 text-xs font-bold uppercase">
+                    <T text={"User"} />
+                  </th>
+                  <th className="pb-2 text-xs font-bold uppercase">
+                    <T text={"Created At"} />
+                  </th>
+                  <th className="pb-2 text-xs font-bold uppercase">
+                    <T text={"Status"} />
+                  </th>
                   <th className="w-12 pb-2">
-                    <span className="sr-only">Actions</span>
+                    <span className="sr-only">
+                      <T text={"Actions"} />
+                    </span>
                   </th>
                 </tr>
               </thead>
@@ -255,5 +286,6 @@ export default function Page({ loaderData }: Route.ComponentProps) {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  return <PageError error={error} page="Users" />;
+  const { t } = useI18n();
+  return <PageError error={error} page={t("Users")} />;
 }

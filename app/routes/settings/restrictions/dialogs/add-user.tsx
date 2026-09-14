@@ -6,6 +6,7 @@ import Input from "~/components/input";
 import Text from "~/components/text";
 import Title from "~/components/title";
 import { useForm } from "~/hooks/use-form";
+import { T, useI18n } from "~/i18n/provider";
 
 const userSchema = type({
   user: "string > 0",
@@ -17,6 +18,7 @@ interface AddUserProps {
 }
 
 export default function AddUser({ users, isDisabled }: AddUserProps) {
+  const { t } = useI18n();
   const form = useForm({
     schema: userSchema,
     validate: (values) => {
@@ -33,18 +35,26 @@ export default function AddUser({ users, isDisabled }: AddUserProps) {
 
   return (
     <Dialog>
-      <Button disabled={isDisabled}>Add user</Button>
+      <Button disabled={isDisabled}>
+        <T text={"Add user"} />
+      </Button>
       <DialogPanel>
-        <Title>Add user</Title>
+        <Title>
+          <T text={"Add user"} />
+        </Title>
         <Text className="mb-4">
-          Add this user to a list of allowed users that can authenticate with Headscale via OIDC.
+          <T
+            text={
+              "Add this user to a list of allowed users that can authenticate with Headscale via OIDC."
+            }
+          />
         </Text>
         <input name="action_id" type="hidden" value="add_user" />
         <Input
           {...form.field("user")}
-          description="The user to allow for OIDC authentication."
+          description={t("The user to allow for OIDC authentication.")}
           required
-          label="User"
+          label={t("User")}
           placeholder="john_doe"
         />
       </DialogPanel>

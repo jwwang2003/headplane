@@ -5,7 +5,7 @@
  * - Under 1 month: "X days, Y hours ago"
  * - Over 1 month: "X months, Y days ago"
  */
-export function formatTimeDelta(date: Date): string {
+export function formatTimeDelta(date: Date, locale: "en" | "zh-CN" = "en"): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
 
@@ -13,6 +13,13 @@ export function formatTimeDelta(date: Date): string {
   const hours = Math.floor(diffMs / (1000 * 60 * 60));
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   const months = Math.floor(days / 30);
+
+  if (locale === "zh-CN") {
+    if (minutes < 60) return `${Math.max(0, minutes)} 分钟前`;
+    if (hours < 24) return `${hours} 小时${minutes % 60 ? ` ${minutes % 60} 分钟` : ""}前`;
+    if (days < 30) return `${days} 天${hours % 24 ? ` ${hours % 24} 小时` : ""}前`;
+    return `${months} 个月${days % 30 ? ` ${days % 30} 天` : ""}前`;
+  }
 
   if (minutes < 60) {
     return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;

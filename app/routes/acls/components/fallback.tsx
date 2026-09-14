@@ -1,5 +1,6 @@
 import { Loader2 } from "lucide-react";
 
+import { T } from "~/i18n/provider";
 import cn from "~/utils/cn";
 
 export default function Fallback() {
@@ -10,7 +11,9 @@ export default function Fallback() {
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-2 text-[var(--cm-gutter-fg)]">
           <Loader2 className="size-5 animate-spin" />
-          <p className="text-sm">Loading editor…</p>
+          <p className="text-sm">
+            <T text={"Loading editor…"} />
+          </p>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { Ellipsis } from "lucide-react";
 import { useState } from "react";
 
 import { Menu, MenuContent, MenuItem, MenuSeparator, MenuTrigger } from "~/components/menu";
+import { T } from "~/i18n/provider";
 
 import Delete from "../dialogs/delete-user";
 import Rename from "../dialogs/rename-user";
@@ -46,10 +47,14 @@ export default function HeadscaleUserMenu({ user }: HeadscaleUserMenuProps) {
           <Ellipsis className="h-5" />
         </MenuTrigger>
         <MenuContent>
-          {canRename && <MenuItem onClick={() => setModal("rename")}>Rename</MenuItem>}
+          {canRename && (
+            <MenuItem onClick={() => setModal("rename")}>
+              <T text={"Rename"} />
+            </MenuItem>
+          )}
           {canRename && <MenuSeparator />}
           <MenuItem variant="danger" onClick={() => setModal("delete")}>
-            Delete
+            <T text={"Delete"} />
           </MenuItem>
         </MenuContent>
       </Menu>

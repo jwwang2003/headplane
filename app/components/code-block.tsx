@@ -1,5 +1,6 @@
 import { Copy } from "lucide-react";
 
+import { T } from "~/i18n/provider";
 import cn from "~/utils/cn";
 import toast from "~/utils/toast";
 
@@ -27,7 +28,7 @@ export default function CodeBlock({ children, className }: CodeBlockProps) {
       <code className="block px-3 pt-2 pb-1 text-sm break-all">{text}</code>
       <span className="mt-0.5 flex items-center gap-1 px-3 pb-2 text-xs text-mist-500 dark:text-mist-400">
         <Copy className="size-3" />
-        Click to copy
+        <T text={"Click to copy"} />
       </span>
     </button>
   );

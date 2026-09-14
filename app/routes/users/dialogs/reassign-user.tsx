@@ -4,6 +4,7 @@ import Notice from "~/components/notice";
 import RadioGroup from "~/components/radio-group";
 import Text from "~/components/text";
 import Title from "~/components/title";
+import { T, useI18n } from "~/i18n/provider";
 import { Roles } from "~/server/web/roles";
 import type { Role } from "~/server/web/roles";
 
@@ -22,33 +23,41 @@ export default function ReassignUser({
   isOpen,
   setIsOpen,
 }: ReassignProps) {
+  const { t } = useI18n();
   return (
     <Dialog isOpen={isOpen} onOpenChange={setIsOpen}>
       <DialogPanel variant={role === "owner" ? "unactionable" : "normal"}>
-        <Title>Change role for {displayName}?</Title>
+        <Title>
+          <T text={"Change role for"} /> {displayName}?
+        </Title>
         <Text className="mb-6">
-          Roles control what the user can access in Headplane. Each role grants a specific set of
-          capabilities.{" "}
+          <T
+            text={
+              "Roles control what the user can access in Headplane. Each role grants a specific set of capabilities."
+            }
+          />{" "}
           <Link external styled to="https://tailscale.com/kb/1138/user-roles">
-            Learn More
+            <T text={"Learn More"} />
           </Link>
         </Text>
         {role === "owner" ? (
-          <Notice>The Tailnet owner cannot be reassigned.</Notice>
+          <Notice>
+            <T text={"The Tailnet owner cannot be reassigned."} />
+          </Notice>
         ) : (
           <>
             <input name="action_id" type="hidden" value="reassign_user" />
             <input name="headplane_user_id" type="hidden" value={headplaneUserId} />
-            <RadioGroup className="gap-4" defaultValue={role} label="Role" name="new_role">
+            <RadioGroup className="gap-4" defaultValue={role} label={t("Role")} name="new_role">
               {Object.keys(Roles)
                 .filter((r) => r !== "owner")
                 .map((r) => {
                   const { name, desc } = mapRoleToName(r);
                   return (
-                    <RadioGroup.Radio key={r} label={name} value={r}>
+                    <RadioGroup.Radio key={r} label={t(name)} value={r}>
                       <div className="block">
-                        <p className="font-bold">{name}</p>
-                        <p className="opacity-70">{desc}</p>
+                        <p className="font-bold">{t(name)}</p>
+                        <p className="opacity-70">{t(desc)}</p>
                       </div>
                     </RadioGroup.Radio>
                   );
