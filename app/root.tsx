@@ -19,10 +19,10 @@ import { ErrorBanner } from "./components/error-banner";
 
 import "@fontsource-variable/inter/opsz.css";
 import "./tailwind.css";
+import { organizationName } from "./utils/branding";
 import { getColorScheme } from "./utils/color-scheme";
 
-export const meta: Route.MetaFunction = ({ loaderData }) => [
-  { title: loaderData?.branding.name ?? "Headplane" },
+export const meta: Route.MetaFunction = () => [
   {
     name: "description",
     content: "A frontend for the headscale coordination server",
@@ -66,6 +66,7 @@ function Document({ children }: { readonly children: React.ReactNode }) {
         <head>
           <meta charSet="utf-8" />
           <meta content="width=device-width, initial-scale=1" name="viewport" />
+          <title>{organizationName(loaderData?.branding, locale)}</title>
           <Meta />
           <Links />
           <link href={`${__PREFIX__}/favicon.ico`} rel="icon" />

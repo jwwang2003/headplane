@@ -17,5 +17,14 @@ export function getOrganizationBranding(env: NodeJS.ProcessEnv = process.env) {
       }
     }
   }
-  return { name, logoUrl };
+  return {
+    name,
+    logoUrl,
+    ...(env.HEADPLANE_ORGANIZATION_NAME_EN?.trim()
+      ? { nameEn: env.HEADPLANE_ORGANIZATION_NAME_EN.trim() }
+      : {}),
+    ...(env.HEADPLANE_ORGANIZATION_NAME_ZH?.trim()
+      ? { nameZh: env.HEADPLANE_ORGANIZATION_NAME_ZH.trim() }
+      : {}),
+  };
 }

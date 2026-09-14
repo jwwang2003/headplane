@@ -3,13 +3,15 @@
 Set these environment variables on the Headplane server/container:
 
 ```dotenv
-HEADPLANE_ORGANIZATION_NAME='飞捷科思 · Fysics'
+HEADPLANE_ORGANIZATION_NAME='Fysics'
+HEADPLANE_ORGANIZATION_NAME_EN='Headplane Fysics'
+HEADPLANE_ORGANIZATION_NAME_ZH='Headplane 飞捷科思'
 HEADPLANE_ORGANIZATION_LOGO_URL='https://assets.example.com/fysics-logo.svg'
 ```
 
 The name replaces Headplane in the administration header and browser tab. The
-logo replaces the H mark beside the name. Values are literal organization data
-and do not change when switching language. Neither setting changes account,
+logo replaces the H mark beside the name. The optional `_NAME_EN` and `_NAME_ZH` overrides follow the selected UI language
+immediately in the header and browser tab; each falls back to the shared name. Neither setting changes account,
 organization or OAuth identities. Upstream attribution/documentation is retained.
 
 Both settings are optional. Empty names default to Headplane. An empty, invalid,
@@ -34,5 +36,7 @@ is installed. For Compose, use `environment` entries on the `headplane` service:
 ```yaml
 environment:
   HEADPLANE_ORGANIZATION_NAME: ${HEADPLANE_ORGANIZATION_NAME:-}
+  HEADPLANE_ORGANIZATION_NAME_EN: ${HEADPLANE_ORGANIZATION_NAME_EN:-}
+  HEADPLANE_ORGANIZATION_NAME_ZH: ${HEADPLANE_ORGANIZATION_NAME_ZH:-}
   HEADPLANE_ORGANIZATION_LOGO_URL: ${HEADPLANE_ORGANIZATION_LOGO_URL:-}
 ```

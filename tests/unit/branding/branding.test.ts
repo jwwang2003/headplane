@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { getOrganizationBranding } from "~/server/branding.server";
+import { organizationName } from "~/utils/branding";
 
 describe("public organization branding", () => {
   it("keeps defaults and does not expose unrelated environment secrets", () => {
@@ -35,4 +36,17 @@ describe("public organization branding", () => {
       ).toBeUndefined();
     }
   });
+});
+
+it("selects explicit localized names while retaining the shared fallback", () => {
+  const branding = getOrganizationBranding({
+    HEADPLANE_ORGANIZATION_NAME: "Company",
+    HEADPLANE_ORGANIZATION_NAME_EN: "Headplane Fysics",
+    HEADPLANE_ORGANIZATION_NAME_ZH: "Headplane 飞捷科思",
+  });
+  expect(organizationName(branding, "en")).toBe("Headplane Fysics");
+  expect(organizationName(branding, "zh-CN")).toBe("Headplane 飞捷科思");
+  expect(
+    organizationName(getOrganizationBranding({ HEADPLANE_ORGANIZATION_NAME: "Company" }), "zh-CN"),
+  ).toBe("Company");
 });

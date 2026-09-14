@@ -20,6 +20,7 @@ import { LanguageSwitcher, T, useI18n } from "~/i18n/provider";
 import logoBg from "~/logo/dark-bg.svg";
 import logoDark from "~/logo/dark.svg";
 import logoLight from "~/logo/light.svg";
+import { organizationName as getOrganizationName } from "~/utils/branding";
 import cn from "~/utils/cn";
 import type { ColorScheme } from "~/utils/color-scheme";
 
@@ -61,12 +62,12 @@ const colorSchemes = [
 }>;
 
 export default function Header({ user, access, configAvailable }: HeaderProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const submit = useSubmit();
   const showTabs = access.ui;
   const rootRoute = useRoute("root");
   const branding = rootRoute?.loaderData?.branding;
-  const organizationName = branding?.name ?? "Headplane";
+  const organizationName = getOrganizationName(branding, locale);
   const [failedLogo, setFailedLogo] = useState<string>();
   const customLogo =
     branding?.logoUrl && failedLogo !== branding.logoUrl ? branding.logoUrl : undefined;

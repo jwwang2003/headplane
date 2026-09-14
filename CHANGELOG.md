@@ -2,6 +2,8 @@
 
 ## Changes
 
+- Set English and Chinese organization names with HEADPLANE_ORGANIZATION_NAME_EN and HEADPLANE_ORGANIZATION_NAME_ZH; the header and browser tab follow language changes immediately.
+
 - Customize the administration header name and logo using HEADPLANE_ORGANIZATION_NAME and HEADPLANE_ORGANIZATION_LOGO_URL; unset or unavailable logos retain the Headplane logo.
 
 - The language selector now sits beside the user icon in the administration header, and at the top right on login and error pages.
