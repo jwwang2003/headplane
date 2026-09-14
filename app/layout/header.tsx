@@ -11,6 +11,7 @@ import {
   Sun,
   Users,
 } from "lucide-react";
+import { useState } from "react";
 import { NavLink, unstable_useRoute as useRoute, useLocation, useSubmit } from "react-router";
 
 import Link from "~/components/link";
@@ -64,6 +65,11 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
   const submit = useSubmit();
   const showTabs = access.ui;
   const rootRoute = useRoute("root");
+  const branding = rootRoute?.loaderData?.branding;
+  const organizationName = branding?.name ?? "Headplane";
+  const [failedLogo, setFailedLogo] = useState<string>();
+  const customLogo =
+    branding?.logoUrl && failedLogo !== branding.logoUrl ? branding.logoUrl : undefined;
   const currentColorScheme: ColorScheme = rootRoute?.loaderData?.colorScheme ?? "system";
   // useLocation returns the path with the basename already stripped, which is
   // what `redirect()` expects — react-router re-applies the basename when
@@ -80,13 +86,28 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
     >
       <div className="container flex items-center gap-x-4 py-4">
         <div className="flex min-w-0 items-center gap-x-4">
-          <div className="flex items-center gap-x-2">
-            <picture className="min-w-8">
-              <source srcSet={logoLight} media="(prefers-color-scheme: dark)" />
-              <source srcSet={logoDark} media="(prefers-color-scheme: light)" />
-              <img src={logoBg} alt="Headplane logo" />
-            </picture>
-            <h1 className="text-2xl font-semibold">headplane</h1>
+          <div className="flex min-w-0 items-center gap-x-2">
+            {customLogo ? (
+              <img
+                src={customLogo}
+                alt={`${organizationName} logo`}
+                className="size-8 shrink-0 object-contain"
+                referrerPolicy="no-referrer"
+                onError={() => setFailedLogo(customLogo)}
+              />
+            ) : (
+              <picture className="min-w-8 shrink-0">
+                <source srcSet={logoLight} media="(prefers-color-scheme: dark)" />
+                <source srcSet={logoDark} media="(prefers-color-scheme: light)" />
+                <img src={logoBg} alt="Headplane logo" />
+              </picture>
+            )}
+            <h1
+              className="max-w-36 truncate text-2xl font-semibold lg:max-w-64"
+              title={organizationName}
+            >
+              {organizationName}
+            </h1>
           </div>
           {showTabs && (
             <nav className="hidden items-center gap-x-2 overflow-x-auto p-1 text-sm font-medium md:flex">

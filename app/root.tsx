@@ -1,4 +1,3 @@
-import type { MetaFunction } from "react-router";
 import {
   Links,
   Meta,
@@ -11,6 +10,7 @@ import {
 
 import { getLocale } from "~/i18n/locale";
 import { I18nProvider, LanguageSwitcher, useI18n } from "~/i18n/provider";
+import { getOrganizationBranding } from "~/server/branding.server";
 import { LiveDataProvider } from "~/utils/live-data";
 import ToastProvider from "~/utils/toast-provider";
 
@@ -21,8 +21,8 @@ import "@fontsource-variable/inter/opsz.css";
 import "./tailwind.css";
 import { getColorScheme } from "./utils/color-scheme";
 
-export const meta: MetaFunction = () => [
-  { title: "Headplane" },
+export const meta: Route.MetaFunction = ({ loaderData }) => [
+  { title: loaderData?.branding.name ?? "Headplane" },
   {
     name: "description",
     content: "A frontend for the headscale coordination server",
@@ -31,7 +31,7 @@ export const meta: MetaFunction = () => [
 
 export async function loader({ request }: Route.LoaderArgs) {
   const colorScheme = await getColorScheme(request);
-  return { colorScheme, locale: getLocale(request) };
+  return { colorScheme, locale: getLocale(request), branding: getOrganizationBranding() };
 }
 
 export function Layout({ children }: { readonly children: React.ReactNode }) {

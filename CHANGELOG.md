@@ -2,6 +2,8 @@
 
 ## Changes
 
+- Customize the administration header name and logo using HEADPLANE_ORGANIZATION_NAME and HEADPLANE_ORGANIZATION_LOGO_URL; unset or unavailable logos retain the Headplane logo.
+
 - The language selector now sits beside the user icon in the administration header, and at the top right on login and error pages.
 
 - Choose English or Simplified Chinese from the language selector on any page. Headplane remembers your preference across login, navigation, and reloads; administration pages, dialogs, and authentication notices update immediately.
