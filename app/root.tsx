@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
   unstable_useRoute as useRoute,
+  useMatches,
 } from "react-router";
 
 import { getLocale } from "~/i18n/locale";
@@ -46,6 +47,7 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
 function Document({ children }: { readonly children: React.ReactNode }) {
   const { loaderData } = useRoute("root");
   const { locale } = useI18n();
+  const hasAppLayout = useMatches().some((match) => match.id === "layout/app");
   // LiveDataProvider is wrapped at the top level since dialogs and things
   // that control its state are usually open in portal containers which
   // are not a part of the normal React tree.
@@ -70,9 +72,11 @@ function Document({ children }: { readonly children: React.ReactNode }) {
         </head>
         <body className="w-full overflow-x-hidden overscroll-none dark:bg-mist-900 dark:text-mist-50">
           {children}
-          <div className="fixed right-4 bottom-4 z-50">
-            <LanguageSwitcher />
-          </div>
+          {!hasAppLayout && (
+            <div className="fixed top-4 right-4 z-50">
+              <LanguageSwitcher />
+            </div>
+          )}
           <ToastProvider />
           <ScrollRestoration />
           <Scripts />
@@ -83,8 +87,14 @@ function Document({ children }: { readonly children: React.ReactNode }) {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const hasAppLayout = useMatches().some((match) => match.id === "layout/app");
   return (
     <div className="flex h-screen w-screen items-center justify-center p-4">
+      {hasAppLayout && (
+        <div className="fixed top-4 right-4 z-50">
+          <LanguageSwitcher />
+        </div>
+      )}
       <ErrorBanner className="max-w-2xl" error={error} />
     </div>
   );

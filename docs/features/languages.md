@@ -1,8 +1,8 @@
 # Interface language
 
 Headplane supports English and Simplified Chinese (简体中文). Use the language
-selector in the bottom-right corner of any page, including the login page and
-error pages. Changing language updates the interface immediately and preserves
+selector beside the user icon in the top-right administration header. On login
+and error pages, the selector appears in the top-right corner. Changing language updates the interface immediately and preserves
 open forms and dialogs. The selection is remembered for one year in the
 `headplane_locale` preference cookie. Clearing cookies resets this preference.
 
