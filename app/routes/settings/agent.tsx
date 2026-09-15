@@ -6,8 +6,8 @@ import Notice from "~/components/notice";
 import StatusCircle from "~/components/status-circle";
 import Text from "~/components/text";
 import Title from "~/components/title";
+import { useI18n } from "~/i18n";
 import { agentsContext, authContext } from "~/server/context";
-import { formatTimeDelta } from "~/utils/time";
 
 import type { Route } from "./+types/agent";
 
@@ -52,16 +52,18 @@ export async function action({ request, context }: Route.ActionArgs) {
 
 export default function Page({ loaderData }: Route.ComponentProps) {
   const fetcher = useFetcher<typeof action>();
+  const { t, formatRelativeTime } = useI18n();
   const isSyncing = fetcher.state !== "idle";
 
   if (!loaderData.enabled) {
     return (
       <div className="flex max-w-(--breakpoint-lg) flex-col gap-8">
-        <Title>Headplane Agent</Title>
+        <Title>{t("Headplane Agent")}</Title>
         <Notice title="Agent Not Enabled">
-          {loaderData.reason}. To learn how to set up the agent, visit the{" "}
+          {loaderData.reason}
+          {t(". To learn how to set up the agent, visit the")}{" "}
           <Link external styled to="https://headplane.net/features/agent">
-            documentation
+            {t("documentation")}
           </Link>
         </Notice>
       </div>
@@ -74,41 +76,45 @@ export default function Page({ loaderData }: Route.ComponentProps) {
   return (
     <div className="flex max-w-(--breakpoint-lg) flex-col gap-8">
       <div className="flex w-full flex-col sm:w-2/3">
-        <Title>Headplane Agent</Title>
+        <Title>{t("Headplane Agent")}</Title>
         <Text>
-          The Headplane Agent syncs node information like OS version and connectivity details from
-          your Tailnet.
+          {t(
+            "The Headplane Agent syncs node information like OS version and connectivity details from your Tailnet.",
+          )}
         </Text>
       </div>
 
       <div className="flex items-center gap-3">
         <StatusCircle isOnline={!hasError && !isPending} className="h-5 w-5" />
         <span className="text-lg font-medium">
-          {hasError ? "Error" : isPending ? "Waiting for approval" : "Healthy"}
+          {hasError ? t("Error") : isPending ? t("Waiting for approval") : t("Healthy")}
         </span>
       </div>
 
       <div className="flex flex-col gap-2">
         <Text>
-          <span className="font-medium">Last synced: </span>
+          <span className="font-medium">{t("Last synced:")} </span>
           {loaderData.syncedAt ? (
-            <span suppressHydrationWarning>{formatTimeDelta(new Date(loaderData.syncedAt))}</span>
+            <span suppressHydrationWarning>
+              {formatRelativeTime(new Date(loaderData.syncedAt))}
+            </span>
           ) : (
-            "Never"
+            t("Never")
           )}
         </Text>
         <Text>
-          <span className="font-medium">Nodes synced: </span>
+          <span className="font-medium">{t("Nodes synced:")} </span>
           {loaderData.nodeCount}
         </Text>
       </div>
 
       {isPending ? (
         <Notice variant="warning" title="Agent Needs Approval">
-          The agent is waiting for its Tailnet registration to be approved. Headplane will attempt
-          to auto-approve it, but if that fails, you can complete approval by visiting{" "}
+          {t(
+            "The agent is waiting for its Tailnet registration to be approved. Headplane will attempt to auto-approve it, but if that fails, you can complete approval by visiting",
+          )}{" "}
           <Link external styled to={loaderData.authUrl!}>
-            this link
+            {t("this link")}
           </Link>
           .
         </Notice>
@@ -122,7 +128,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
 
       <fetcher.Form method="post">
         <Button type="submit" variant="heavy" disabled={isSyncing}>
-          {isSyncing ? "Syncing…" : "Sync Now"}
+          {isSyncing ? t("Syncing…") : t("Sync Now")}
         </Button>
       </fetcher.Form>
     </div>

@@ -6,6 +6,7 @@ import Input from "~/components/input";
 import Text from "~/components/text";
 import Title from "~/components/title";
 import { useForm } from "~/hooks/use-form";
+import { useI18n } from "~/i18n";
 
 const domainSchema = type({
   domain: "string > 0",
@@ -17,6 +18,7 @@ interface AddDomainProps {
 }
 
 export default function AddDomain({ domains, isDisabled }: AddDomainProps) {
+  const { t } = useI18n();
   const form = useForm({
     schema: domainSchema,
     validate: (values) => {
@@ -43,20 +45,21 @@ export default function AddDomain({ domains, isDisabled }: AddDomainProps) {
 
   return (
     <Dialog>
-      <Button disabled={isDisabled}>Add domain</Button>
+      <Button disabled={isDisabled}>{t("Add domain")}</Button>
       <DialogPanel>
-        <Title>Add domain</Title>
+        <Title>{t("Add domain")}</Title>
         <Text className="mb-4">
-          Add this domain to a list of allowed email domains that can authenticate with Headscale
-          via OIDC.
+          {t(
+            "Add this domain to a list of allowed email domains that can authenticate with Headscale via OIDC.",
+          )}
         </Text>
         <input name="action_id" type="hidden" value="add_domain" />
         <Input
           {...form.field("domain")}
           description={
             domain.length > 0
-              ? `Matches users with <user>@${domain}`
-              : "Enter a domain to match users with their email addresses."
+              ? t("Matches users with <user>@{domain}", { domain })
+              : t("Enter a domain to match users with their email addresses.")
           }
           required
           label="Domain"

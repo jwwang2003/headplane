@@ -4,6 +4,7 @@ import { Form } from "react-router";
 
 import Button from "~/components/button";
 import TableList from "~/components/table-list";
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 interface RestrictionProps {
@@ -14,10 +15,13 @@ interface RestrictionProps {
 }
 
 export default function RestrictionTable({ children, type, values, isDisabled }: RestrictionProps) {
+  const { t } = useI18n();
   return (
     <div className="w-full sm:w-2/3">
       <h2 className="mt-8 text-2xl font-medium">
-        Permitted {type.charAt(0).toUpperCase() + type.slice(1)}s
+        {t(
+          { domain: "Permitted Domains", group: "Permitted Groups", user: "Permitted Users" }[type],
+        )}
       </h2>
       <TableList className="my-4">
         {values.length > 0 ? (
@@ -40,7 +44,7 @@ export default function RestrictionTable({ children, type, values, isDisabled }:
                   disabled={isDisabled}
                   type="submit"
                 >
-                  Remove
+                  {t("Remove")}
                 </Button>
               </Form>
             </TableList.Item>
@@ -48,7 +52,15 @@ export default function RestrictionTable({ children, type, values, isDisabled }:
         ) : (
           <TableList.Item className="flex flex-col items-center gap-2.5 py-4 opacity-70">
             {iconForType(type)}
-            <p className="text-center font-semibold">All {type}s are permitted to authenticate.</p>
+            <p className="text-center font-semibold">
+              {t(
+                {
+                  domain: "All domains are permitted to authenticate.",
+                  group: "All groups are permitted to authenticate.",
+                  user: "All users are permitted to authenticate.",
+                }[type],
+              )}
+            </p>
           </TableList.Item>
         )}
       </TableList>

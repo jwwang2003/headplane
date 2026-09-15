@@ -6,6 +6,7 @@ import Input from "~/components/input";
 import Text from "~/components/text";
 import Title from "~/components/title";
 import { useForm } from "~/hooks/use-form";
+import { useI18n } from "~/i18n";
 
 const groupSchema = type({
   group: "string > 0",
@@ -17,6 +18,7 @@ interface AddGroupProps {
 }
 
 export default function AddGroup({ groups, isDisabled }: AddGroupProps) {
+  const { t } = useI18n();
   const form = useForm({
     schema: groupSchema,
     validate: (values) => {
@@ -33,11 +35,13 @@ export default function AddGroup({ groups, isDisabled }: AddGroupProps) {
 
   return (
     <Dialog>
-      <Button disabled={isDisabled}>Add group</Button>
+      <Button disabled={isDisabled}>{t("Add group")}</Button>
       <DialogPanel>
-        <Title>Add group</Title>
+        <Title>{t("Add group")}</Title>
         <Text className="mb-4">
-          Add this group to a list of allowed groups that can authenticate with Headscale via OIDC.
+          {t(
+            "Add this group to a list of allowed groups that can authenticate with Headscale via OIDC.",
+          )}
         </Text>
         <input name="action_id" type="hidden" value="add_group" />
         <Input
