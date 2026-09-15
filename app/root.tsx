@@ -9,7 +9,9 @@ import {
   useMatches,
 } from "react-router";
 
+import { OrganizationTitle } from "~/components/organization-brand";
 import { FloatingLanguageSwitcher, getLocale, I18nProvider } from "~/i18n";
+import { getOrganizationBranding } from "~/server/branding.server";
 import { LiveDataProvider } from "~/utils/live-data";
 import ToastProvider from "~/utils/toast-provider";
 
@@ -21,7 +23,6 @@ import "./tailwind.css";
 import { getColorScheme } from "./utils/color-scheme";
 
 export const meta: MetaFunction = () => [
-  { title: "Headplane" },
   {
     name: "description",
     content: "A frontend for the headscale coordination server",
@@ -30,7 +31,7 @@ export const meta: MetaFunction = () => [
 
 export async function loader({ request }: Route.LoaderArgs) {
   const colorScheme = await getColorScheme(request);
-  return { colorScheme, locale: getLocale(request) };
+  return { colorScheme, locale: getLocale(request), branding: getOrganizationBranding() };
 }
 
 export function Layout({ children }: { readonly children: React.ReactNode }) {
@@ -61,6 +62,7 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
         </head>
         <body className="w-full overflow-x-hidden overscroll-none dark:bg-mist-900 dark:text-mist-50">
           <I18nProvider initialLocale={loaderData?.locale ?? "en"}>
+            <OrganizationTitle branding={loaderData?.branding} />
             {children}
             {!hasAppLayout && <FloatingLanguageSwitcher />}
             <ToastProvider />
