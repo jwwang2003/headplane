@@ -6,6 +6,7 @@ import Button from "~/components/button";
 import Card from "~/components/card";
 import Code from "~/components/code";
 import StatusBanner from "~/components/status-banner";
+import { useI18n } from "~/i18n";
 import {
   agentsContext,
   appConfigContext,
@@ -146,6 +147,7 @@ export const links: Route.LinksFunction = () => [
 
 export default function Page({ loaderData }: Route.ComponentProps) {
   const { hostname, username, offline, node, compatibilityWarning } = loaderData;
+  const { t } = useI18n();
 
   if (offline) {
     return (
@@ -154,14 +156,14 @@ export default function Page({ loaderData }: Route.ComponentProps) {
         <div className="flex h-screen w-screen items-center justify-center bg-black">
           <Card className="w-screen" variant="flat">
             <div className="flex items-center justify-between gap-4">
-              <Card.Title>Node Offline</Card.Title>
+              <Card.Title>{t("Node Offline")}</Card.Title>
               <WifiOff className="mb-2 h-6 w-6 text-red-500" />
             </div>
             <Card.Text>
-              <Code>{hostname}</Code> is not currently connected to the Tailnet.
+              <Code>{hostname}</Code> {t("is not currently connected to the Tailnet.")}
             </Card.Text>
             <Button className="mt-8 w-full" onClick={() => window.location.reload()}>
-              Retry Connection
+              {t("Retry Connection")}
             </Button>
           </Card>
         </div>
@@ -191,17 +193,18 @@ function BrowserSSHCompatibilityBanner({
 }: {
   warning: { version: string } | null | undefined;
 }) {
+  const { t } = useI18n();
   if (!warning) return null;
 
   return (
     <div className="fixed inset-x-4 top-4 z-[60] mx-auto max-w-2xl">
       <StatusBanner
         variant="warning"
-        title={`Browser SSH is broken on Headscale ${warning.version}`}
+        title={t("Browser SSH is broken on Headscale {version}", { version: warning.version })}
       >
-        Headscale 0.29 beta releases through 0.29.1 reject Tailscale's browser/WASM{" "}
-        <Code>/ts2021</Code> WebSocket request with <Code>405 Method Not Allowed</Code>. Upgrade
-        Headscale to 0.29.2 or newer, or use Headscale 0.28.x.
+        {t("Headscale 0.29 beta releases through 0.29.1 reject Tailscale's browser/WASM")}{" "}
+        <Code>/ts2021</Code> {t("WebSocket request with")} <Code>405 Method Not Allowed</Code>
+        {t(". Upgrade Headscale to 0.29.2 or newer, or use Headscale 0.28.x.")}
       </StatusBanner>
     </div>
   );
@@ -217,8 +220,11 @@ function SSHConsole({
   node: { ipAddress: string; controlURL: string; preAuthKey: string; ephemeralHostname: string };
 }) {
   const [ipn, setIpn] = useState<IPN | null>(null);
+  const { t } = useI18n();
   const [connected, setConnected] = useState(false);
-  const [status, setStatus] = useState("Joining Tailnet…");
+  const [status, setStatus] = useState<{ message: string; values?: Record<string, string> }>({
+    message: "Joining Tailnet…",
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -228,17 +234,21 @@ function SSHConsole({
       authKey: node.preAuthKey,
       hostname: node.ephemeralHostname,
       onPanic: (error) => {
-        if (!cancelled) setStatus(`Tailnet node stopped: ${error}`);
+        if (!cancelled)
+          setStatus({ message: "Tailnet node stopped: {error}", values: { error: String(error) } });
       },
     }).then(
       (instance) => {
         if (cancelled) return;
-        setStatus(`Connecting to ${hostname}…`);
+        setStatus({ message: "Connecting to {hostname}…", values: { hostname } });
         setIpn(instance);
       },
       (error: unknown) => {
         if (cancelled) return;
-        setStatus(`Failed to join Tailnet: ${error instanceof Error ? error.message : error}`);
+        setStatus({
+          message: "Failed to join Tailnet: {error}",
+          values: { error: String(error instanceof Error ? error.message : error) },
+        });
       },
     );
 
@@ -253,7 +263,7 @@ function SSHConsole({
         <div className="absolute inset-0 z-50 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="size-8 animate-spin text-mist-200" />
-            <p className="text-sm text-mist-400">{status}</p>
+            <p className="text-sm text-mist-400">{t(status.message, status.values)}</p>
           </div>
         </div>
       )}
@@ -282,6 +292,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       <SSHErrorBoundary
         title={routeError.title}
         message={routeError.message}
+        values={routeError.values}
         anchor={routeError.anchor}
       />
     </div>

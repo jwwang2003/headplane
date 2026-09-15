@@ -2,6 +2,7 @@ import { AlertCircle } from "lucide-react";
 
 import Card from "~/components/card";
 import Link from "~/components/link";
+import { useI18n } from "~/i18n";
 
 export const sshErrors = {
   wasm_missing: {
@@ -24,7 +25,8 @@ export const sshErrors = {
 
   node_not_found: (hostname: string) => ({
     title: "Node not found",
-    message: `No node found with hostname ${hostname}.`,
+    message: "No node found with hostname {hostname}.",
+    values: { hostname },
     anchor: "#node-not-found",
   }),
 
@@ -39,6 +41,7 @@ export const sshErrors = {
 interface SSHErrorBoundaryProps {
   title: string;
   message: string;
+  values?: Record<string, string>;
   anchor: string;
 }
 
@@ -57,19 +60,20 @@ export function isSSHError(error: unknown): error is SSHErrorBoundaryProps {
 
 const DOCS_BASE = "https://headplane.net/features/ssh";
 
-export function SSHErrorBoundary({ title, message, anchor }: SSHErrorBoundaryProps) {
+export function SSHErrorBoundary({ title, message, values, anchor }: SSHErrorBoundaryProps) {
+  const { t } = useI18n();
   return (
     <Card className="w-screen" variant="flat">
       <div className="flex items-center justify-between gap-4">
-        <Card.Title>{title}</Card.Title>
+        <Card.Title>{t(title)}</Card.Title>
         <AlertCircle className="mb-2 h-6 w-6 text-red-500" />
       </div>
       <Card.Text>
-        {message}
+        {t(message, values)}
         <br />
         <br />
         <Link to={`${DOCS_BASE}${anchor}`} external styled>
-          Headplane SSH Documentation
+          {t("Headplane SSH Documentation")}
         </Link>{" "}
       </Card.Text>
     </Card>
