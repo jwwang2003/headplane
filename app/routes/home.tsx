@@ -9,6 +9,7 @@ import windowsSvg from "~/assets/windows.svg";
 import Card from "~/components/card";
 import CodeBlock from "~/components/code-block";
 import Link from "~/components/link";
+import { useI18n } from "~/i18n";
 import LinkAccount from "~/layout/link-account";
 import {
   authContext,
@@ -133,6 +134,7 @@ const downloads = [
 ];
 
 export default function Home({ loaderData }: Route.ComponentProps) {
+  const { t } = useI18n();
   if (loaderData.status === "needs_link") {
     return <LinkAccount headscaleUsers={loaderData.headscaleUsers} />;
   }
@@ -143,15 +145,17 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <Card variant="flat" className="flex max-w-2xl items-center gap-4">
           <Check className="inline-flex size-4" />
           <Card.Text className="text-sm">
-            Your account is linked to Headscale user <strong>{loaderData.linkedUserName}</strong>.
+            {t("Your account is linked to Headscale user")}{" "}
+            <strong>{loaderData.linkedUserName}</strong>.
           </Card.Text>
         </Card>
       )}
       <Card variant="flat" className="max-w-2xl">
-        <Card.Title>Access your network via Tailscale</Card.Title>
+        <Card.Title>{t("Access your network via Tailscale")}</Card.Title>
         <Card.Text className="mt-1">
-          You've successfully authenticated but don't have access to the dashboard. You can still
-          connect to your Headscale network by installing Tailscale.
+          {t(
+            "You've successfully authenticated but don't have access to the dashboard. You can still connect to your Headscale network by installing Tailscale.",
+          )}
         </Card.Text>
 
         <div className="mt-4 rounded-lg border border-mist-200 p-3 dark:border-mist-700">
@@ -166,7 +170,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               styled
               to="https://github.com/tailscale/tailscale/blob/main/scripts/installer.sh"
             >
-              View script source
+              {t("View script source")}
             </Link>
           </p>
         </div>
@@ -202,8 +206,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           )}
         >
           {loaderData.unlinked
-            ? "Your account isn't linked to a Headscale user. Ask your administrator to create one for you."
-            : "Need access to the dashboard? Contact your administrator to request access."}
+            ? t(
+                "Your account isn't linked to a Headscale user. Ask your administrator to create one for you.",
+              )
+            : t("Need access to the dashboard? Contact your administrator to request access.")}
         </Card.Text>
       </Card>
     </div>
