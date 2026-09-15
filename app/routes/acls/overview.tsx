@@ -9,6 +9,7 @@ import Link from "~/components/link";
 import Notice from "~/components/notice";
 import PageError from "~/components/page-error";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "~/components/tabs";
+import { useI18n } from "~/i18n";
 import { isApiError } from "~/server/headscale/api/error-client";
 import toast from "~/utils/toast";
 
@@ -29,6 +30,7 @@ export const action = aclAction;
 
 export default function Page({ loaderData: { access, writable, policy } }: Route.ComponentProps) {
   const [codePolicy, setCodePolicy] = useState(policy);
+  const { t } = useI18n();
   const fetcher = useFetcher<typeof action>();
   const { revalidate } = useRevalidator();
   const disabled = !access || !writable; // Disable if no permission or not writable
@@ -56,27 +58,31 @@ export default function Page({ loaderData: { access, writable, policy } }: Route
     <div>
       {!access ? (
         <Notice title="ACL Policy restricted" variant="warning">
-          You do not have the necessary permissions to edit the Access Control List policy. Please
-          contact your administrator to request access or to make changes to the ACL policy.
+          {t(
+            "You do not have the necessary permissions to edit the Access Control List policy. Please contact your administrator to request access or to make changes to the ACL policy.",
+          )}
         </Notice>
       ) : !writable ? (
         <Notice title="Read-only ACL Policy" variant="error">
-          The ACL policy mode is most likely set to <Code>file</Code> in your Headscale
-          configuration. This means that the ACL file cannot be edited through the web interface. In
-          order to resolve this, you'll need to set <Code>policy.mode</Code> to{" "}
-          <Code>database</Code> in your Headscale configuration.
+          {t("The ACL policy mode is most likely set to")} <Code>file</Code>{" "}
+          {t(
+            "in your Headscale configuration. This means that the ACL file cannot be edited through the web interface. In order to resolve this, you'll need to set",
+          )}{" "}
+          <Code>policy.mode</Code> {t("to")} <Code>database</Code>{" "}
+          {t("in your Headscale configuration.")}
         </Notice>
       ) : undefined}
-      <h1 className="mb-4 text-2xl font-medium">Access Control List (ACL)</h1>
+      <h1 className="mb-4 text-2xl font-medium">{t("Access Control List (ACL)")}</h1>
       <p className="mb-4 max-w-prose">
-        The ACL file is used to define the access control rules for your network. You can find more
-        information about the ACL file in the{" "}
+        {t(
+          "The ACL file is used to define the access control rules for your network. You can find more information about the ACL file in the",
+        )}{" "}
         <Link external styled to="https://tailscale.com/kb/1018/acls">
-          Tailscale ACL guide
+          {t("Tailscale ACL guide")}
         </Link>{" "}
-        and the{" "}
+        {t("and the")}{" "}
         <Link external styled to="https://headscale.net/stable/ref/acls/">
-          Headscale docs
+          {t("Headscale docs")}
         </Link>
         .
       </p>
@@ -91,19 +97,19 @@ export default function Page({ loaderData: { access, writable, policy } }: Route
           <TabsTab value="edit">
             <div className="flex items-center gap-2">
               <Pencil className="p-1" />
-              <span>Edit file</span>
+              <span>{t("Edit file")}</span>
             </div>
           </TabsTab>
           <TabsTab value="diff">
             <div className="flex items-center gap-2">
               <Eye className="p-1" />
-              <span>Preview changes</span>
+              <span>{t("Preview changes")}</span>
             </div>
           </TabsTab>
           <TabsTab value="preview">
             <div className="flex items-center gap-2">
               <FlaskConical className="p-1" />
-              <span>Preview rules</span>
+              <span>{t("Preview rules")}</span>
             </div>
           </TabsTab>
         </TabsList>
@@ -121,8 +127,9 @@ export default function Page({ loaderData: { access, writable, policy } }: Route
           <div className="flex flex-col items-center py-8">
             <Construction />
             <p className="mt-4 w-1/2 text-center">
-              Previewing rules is not available yet. This feature is still in development and is
-              pretty complicated to implement. Hopefully I will be able to get to it soon.
+              {t(
+                "Previewing rules is not available yet. This feature is still in development and is pretty complicated to implement. Hopefully I will be able to get to it soon.",
+              )}
             </p>
           </div>
         </TabsPanel>
@@ -139,7 +146,7 @@ export default function Page({ loaderData: { access, writable, policy } }: Route
         }}
         variant="heavy"
       >
-        Save
+        {t("Save")}
       </Button>
       <Button
         disabled={disabled || fetcher.state !== "idle" || codePolicy === policy}
@@ -148,13 +155,14 @@ export default function Page({ loaderData: { access, writable, policy } }: Route
           setCodePolicy(policy);
         }}
       >
-        Discard Changes
+        {t("Discard Changes")}
       </Button>
     </div>
   );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const { t } = useI18n();
   if (
     isRouteErrorResponse(error) &&
     isApiError(error.data) &&
@@ -165,27 +173,31 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       <div className="flex flex-col gap-4">
         <Card className="max-w-2xl" variant="flat">
           <div className="flex items-center justify-between gap-4">
-            <Card.Title>ACL Policy Unavailable</Card.Title>
+            <Card.Title>{t("ACL Policy Unavailable")}</Card.Title>
             <AlertCircle className="mb-2 h-6 w-6 text-red-500" />
           </div>
           <Card.Text>
-            The ACL policy is currently unavailable because the policy file does not exist on the
-            server. This usually indicates that Headscale is running in <Code>file</Code> mode for
-            ACLs, and the specified policy file is missing.
+            {t(
+              "The ACL policy is currently unavailable because the policy file does not exist on the server. This usually indicates that Headscale is running in",
+            )}{" "}
+            <Code>file</Code> {t("mode for ACLs, and the specified policy file is missing.")}
           </Card.Text>
         </Card>
         <Card className="max-w-2xl" variant="flat">
           <Card.Text>
-            In order to resolve this issue, there are two possible actions you can take:
+            {t("In order to resolve this issue, there are two possible actions you can take:")}
           </Card.Text>
           <ul className="mt-2 ml-4 list-outside list-disc space-y-1 text-sm">
             <li>
-              Create the ACL policy file at the specified path in your Headscale configuration.
+              {t(
+                "Create the ACL policy file at the specified path in your Headscale configuration.",
+              )}
             </li>
             <li>
-              Alternatively, you can switch Headscale to use <Code>database</Code> mode for ACLs by
-              updating your Headscale configuration. This will allow Headplane to manage the ACL
-              policy directly through the web interface.
+              {t("Alternatively, you can switch Headscale to use")} <Code>database</Code>{" "}
+              {t(
+                "mode for ACLs by updating your Headscale configuration. This will allow Headplane to manage the ACL policy directly through the web interface.",
+              )}
             </li>
           </ul>
         </Card>
