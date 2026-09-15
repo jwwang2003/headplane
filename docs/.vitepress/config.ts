@@ -57,6 +57,8 @@ export default defineConfig({
               },
               { text: "Headplane Agent", link: "/features/agent" },
               { text: "Browser SSH", link: "/features/ssh" },
+              { text: "Interface Language", link: "/features/languages" },
+              { text: "Organization Branding", link: "/features/branding" },
             ],
           },
           {
