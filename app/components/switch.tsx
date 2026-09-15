@@ -1,5 +1,6 @@
 import { Switch as BaseSwitch } from "@base-ui/react/switch";
 
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 export interface SwitchProps {
@@ -14,9 +15,10 @@ export interface SwitchProps {
 }
 
 export default function Switch(props: SwitchProps) {
+  const { t } = useI18n();
   return (
     <BaseSwitch.Root
-      aria-label={props.label}
+      aria-label={t(props.label)}
       checked={props.checked}
       className={cn(
         "flex h-[22px] w-[38px] p-[3px] shrink-0 rounded-full",

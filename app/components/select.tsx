@@ -1,6 +1,7 @@
 import { Combobox } from "@base-ui/react/combobox";
 import { Check, ChevronDown } from "lucide-react";
 
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 export interface SelectItem {
@@ -39,6 +40,7 @@ export default function Select({
   name,
   ...props
 }: SelectProps) {
+  const { t } = useI18n();
   const selectedItem =
     value !== undefined ? (items.find((i) => i.value === value) ?? null) : undefined;
   const defaultSelectedItem =
@@ -48,7 +50,7 @@ export default function Select({
     <div className={cn("flex flex-col gap-1", className)}>
       {label && (
         <label className={cn("text-sm font-medium", "text-mist-700 dark:text-mist-200")}>
-          {label}
+          {t(label)}
         </label>
       )}
       <Combobox.Root
@@ -103,7 +105,7 @@ export default function Select({
               )}
             >
               <Combobox.Empty className="px-3 py-2 text-sm text-mist-500 empty:hidden">
-                No results found.
+                {t("No results found.")}
               </Combobox.Empty>
               <Combobox.List>
                 {(item: SelectItem) => (
@@ -131,7 +133,7 @@ export default function Select({
         </Combobox.Portal>
       </Combobox.Root>
       {description && (
-        <div className={cn("text-xs", "text-mist-500 dark:text-mist-400")}>{description}</div>
+        <div className={cn("text-xs", "text-mist-500 dark:text-mist-400")}>{t(description)}</div>
       )}
     </div>
   );

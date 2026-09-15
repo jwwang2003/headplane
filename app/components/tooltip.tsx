@@ -1,6 +1,7 @@
 import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
 import type { ReactNode } from "react";
 
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 export interface TooltipProps {
@@ -10,6 +11,7 @@ export interface TooltipProps {
 }
 
 export default function Tooltip({ children, content, className }: TooltipProps) {
+  const { t } = useI18n();
   return (
     <BaseTooltip.Root>
       <BaseTooltip.Trigger
@@ -36,7 +38,7 @@ export default function Tooltip({ children, content, className }: TooltipProps) 
               className,
             )}
           >
-            {content}
+            {typeof content === "string" ? t(content) : content}
           </BaseTooltip.Popup>
         </BaseTooltip.Positioner>
       </BaseTooltip.Portal>

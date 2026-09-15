@@ -1,6 +1,7 @@
 import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import type { ComponentProps, ReactNode } from "react";
 
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 export interface TabsProps {
@@ -13,11 +14,12 @@ export interface TabsProps {
 }
 
 function Tabs({ label, className, children, ...props }: TabsProps) {
+  const { t } = useI18n();
   return (
     <BaseTabs.Root
       {...props}
       defaultValue={props.defaultValue ?? 0}
-      aria-label={label}
+      aria-label={t(label)}
       className={cn("flex flex-col", className)}
     >
       {children}

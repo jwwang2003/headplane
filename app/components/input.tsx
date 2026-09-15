@@ -3,6 +3,7 @@ import { Input as BaseInput } from "@base-ui/react/input";
 import { Asterisk } from "lucide-react";
 import type { ComponentProps } from "react";
 
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 export interface InputProps extends Omit<ComponentProps<typeof BaseInput>, "onChange"> {
@@ -17,6 +18,7 @@ export interface InputProps extends Omit<ComponentProps<typeof BaseInput>, "onCh
 }
 
 export default function Input(props: InputProps) {
+  const { t } = useI18n();
   const {
     label,
     labelHidden,
@@ -38,7 +40,7 @@ export default function Input(props: InputProps) {
           labelHidden && "sr-only",
         )}
       >
-        {label}
+        {t(label)}
         {required && <Asterisk className="ml-0.5 inline w-3.5 pb-1 text-red-500" />}
       </Field.Label>
       <BaseInput
@@ -59,12 +61,12 @@ export default function Input(props: InputProps) {
       />
       {description && (
         <Field.Description className={cn("text-xs", "text-mist-500 dark:text-mist-400")}>
-          {description}
+          {t(description)}
         </Field.Description>
       )}
       {invalid && errorMessage ? (
         <Field.Error className={cn("text-xs", "text-red-500 dark:text-red-400")}>
-          {errorMessage}
+          {t(errorMessage)}
         </Field.Error>
       ) : null}
     </Field.Root>

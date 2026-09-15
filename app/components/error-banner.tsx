@@ -1,6 +1,7 @@
 import { AlertCircle } from "lucide-react";
 import { isRouteErrorResponse } from "react-router";
 
+import { useI18n, type Translate } from "~/i18n";
 import { isApiError, isConnectionError } from "~/server/headscale/api/error-client";
 import cn from "~/utils/cn";
 
@@ -8,7 +9,10 @@ import Card from "./card";
 import Code from "./code";
 import Link from "./link";
 
-export function getErrorMessage(error: Error | unknown): {
+export function getErrorMessage(
+  error: Error | unknown,
+  t: Translate,
+): {
   title: string;
   jsxMessage: React.ReactNode;
 } {
@@ -20,10 +24,12 @@ export function getErrorMessage(error: Error | unknown): {
           jsxMessage: (
             <>
               <Card.Text>
-                There was an error communicating with the Headscale API.
+                {t("There was an error communicating with the Headscale API.")}
                 <br />
-                The server responded with a status code of <strong>{statusCode}</strong>, indicating
-                a server-side issue. Please check the Headscale server status and try again later.
+                {t("The server responded with a status code of")} <strong>{statusCode}</strong>
+                {t(
+                  ", indicating a server-side issue. Please check the Headscale server status and try again later.",
+                )}
               </Card.Text>
               {(error.data.data != null || error.data.rawData != null) && (
                 <pre className="mt-2 overflow-x-auto rounded-lg bg-mist-100 p-2 dark:bg-mist-800">
@@ -36,7 +42,7 @@ export function getErrorMessage(error: Error | unknown): {
               )}
             </>
           ),
-          title: "Headscale API Error",
+          title: t("Headscale API Error"),
         };
       }
 
@@ -46,23 +52,19 @@ export function getErrorMessage(error: Error | unknown): {
         jsxMessage: (
           <>
             <Card.Text className="leading-snug">
-              The Headscale API returned an unexpected response.
-              {authError ? (
-                <>
-                  {" "}
-                  The status code indicates an authentication error. Please verify your API key and
-                  Headplane configuration.
-                </>
-              ) : (
-                <> You may be using an unsupported version of Headscale or this may be a bug.</>
-              )}
+              {t("The Headscale API returned an unexpected response.")}{" "}
+              {authError
+                ? t(
+                    "The status code indicates an authentication error. Please verify your API key and Headplane configuration.",
+                  )
+                : t("You may be using an unsupported version of Headscale or this may be a bug.")}
             </Card.Text>
             <ul className="mt-2 list-inside list-disc">
               <li>
-                Request URL: <Code>{requestUrl}</Code>
+                {t("Request URL:")} <Code>{requestUrl}</Code>
               </li>
               <li>
-                Status Code:{" "}
+                {t("Status Code:")}{" "}
                 <Code>
                   {/* @ts-expect-error */}
                   {data === null ? (
@@ -77,13 +79,13 @@ export function getErrorMessage(error: Error | unknown): {
                 </Code>
               </li>
             </ul>
-            <Card.Text className="mt-4 text-lg font-semibold">Error Details</Card.Text>
+            <Card.Text className="mt-4 text-lg font-semibold">{t("Error Details")}</Card.Text>
             <pre className="mt-2 overflow-x-auto rounded-lg bg-mist-100 p-2 dark:bg-mist-800">
               <code>{JSON.stringify(error.data, null, 2)}</code>
             </pre>
           </>
         ),
-        title: "Invalid response from Headscale API",
+        title: t("Invalid response from Headscale API"),
       };
     }
 
@@ -93,10 +95,11 @@ export function getErrorMessage(error: Error | unknown): {
         jsxMessage: (
           <>
             <Card.Text className="leading-snug">
-              Headplane was unable to reach the Headscale API. Please check your network setup and
-              configuration to ensure Headplane is able to connect.
+              {t(
+                "Headplane was unable to reach the Headscale API. Please check your network setup and configuration to ensure Headplane is able to connect.",
+              )}
             </Card.Text>
-            <Card.Text className="mt-4 text-lg font-semibold">Error Details</Card.Text>
+            <Card.Text className="mt-4 text-lg font-semibold">{t("Error Details")}</Card.Text>
             <pre className="mt-2 overflow-x-auto rounded-lg bg-mist-100 p-2 dark:bg-mist-800">
               {requestUrl}
               <br />
@@ -111,21 +114,22 @@ export function getErrorMessage(error: Error | unknown): {
             </pre>
           </>
         ),
-        title: "Cannot connect to Headscale API",
+        title: t("Cannot connect to Headscale API"),
       };
     }
 
     return {
       jsxMessage: (
         <>
-          There was an error processing your request.
+          {t("There was an error processing your request.")}
           <br />
-          Status Code: <strong>{error.status}</strong>
+          {t("Status Code:")} <strong>{error.status}</strong>
           <br />
-          Status Text: <strong>{error.data}</strong>
+          {t("Status Text:")}{" "}
+          <strong>{typeof error.data === "string" ? t(error.data) : error.data}</strong>
         </>
       ),
-      title: `Error ${error.status}`,
+      title: t("Error {status}", { status: error.status }),
     };
   }
 
@@ -134,20 +138,21 @@ export function getErrorMessage(error: Error | unknown): {
       jsxMessage: (
         <>
           <Card.Text>
-            An unexpected error occurred which is most likely a bug. Please consider reporting
-            filing an issue on the{" "}
+            {t(
+              "An unexpected error occurred which is most likely a bug. Please consider reporting filing an issue on the",
+            )}{" "}
             <Link external styled to="https://github.com/tale/headplane/issues">
-              Headplane GitHub
+              {t("Headplane GitHub")}
             </Link>{" "}
-            repository with the details below.
+            {t("repository with the details below.")}
           </Card.Text>
-          <Card.Text className="mt-4 text-lg font-semibold">Error Details</Card.Text>
+          <Card.Text className="mt-4 text-lg font-semibold">{t("Error Details")}</Card.Text>
           <pre className="mt-2 overflow-x-auto rounded-lg bg-mist-100 p-2 dark:bg-mist-800">
             <code>{JSON.stringify(error, null, 2)}</code>
           </pre>
         </>
       ),
-      title: "Unexpected Error",
+      title: t("Unexpected Error"),
     };
   }
 
@@ -166,11 +171,11 @@ export function getErrorMessage(error: Error | unknown): {
   }
 
   return {
-    jsxMessage: rootError.message,
+    jsxMessage: t(rootError.message),
     title:
       rootError.name.length > 0 && rootError.name !== "Error"
-        ? `Error: ${rootError.name}`
-        : "Error",
+        ? t("Error: {name}", { name: rootError.name })
+        : t("Error"),
   };
 }
 
@@ -180,7 +185,8 @@ interface ErrorBannerProps {
 }
 
 export function ErrorBanner({ error, className }: ErrorBannerProps) {
-  const { title, jsxMessage } = getErrorMessage(error);
+  const { t } = useI18n();
+  const { title, jsxMessage } = getErrorMessage(error, t);
 
   return (
     <Card className={cn("w-screen", className)} variant="flat">

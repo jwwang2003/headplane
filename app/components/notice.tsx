@@ -2,6 +2,7 @@ import { CircleAlert, CircleSlash2, LucideProps, TriangleAlert } from "lucide-re
 import React from "react";
 
 import Card from "~/components/card";
+import { useI18n } from "~/i18n";
 
 export interface NoticeProps {
   children: React.ReactNode;
@@ -11,10 +12,11 @@ export interface NoticeProps {
 }
 
 export default function Notice({ children, title, variant, icon }: NoticeProps) {
+  const { t } = useI18n();
   return (
     <Card variant="flat" className="my-6 max-w-2xl">
       <div className="flex items-center justify-between">
-        {title ? <Card.Title className="mb-0 text-xl">{title}</Card.Title> : undefined}
+        {title ? <Card.Title className="mb-0 text-xl">{t(title)}</Card.Title> : undefined}
         {!variant && icon ? icon : iconForVariant(variant)}
       </div>
       <Card.Text className="mt-4">{children}</Card.Text>

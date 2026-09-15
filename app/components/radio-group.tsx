@@ -2,6 +2,7 @@ import { Radio } from "@base-ui/react/radio";
 import { RadioGroup as BaseRadioGroup } from "@base-ui/react/radio-group";
 import type React from "react";
 
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 interface RadioGroupProps {
@@ -15,10 +16,11 @@ interface RadioGroupProps {
 }
 
 function RadioGroup({ children, label, className, ...props }: RadioGroupProps) {
+  const { t } = useI18n();
   return (
     <BaseRadioGroup
       {...props}
-      aria-label={label}
+      aria-label={t(label)}
       className={cn("flex flex-col gap-2.5", className)}
     >
       {children}
@@ -35,12 +37,13 @@ interface RadioItemProps {
 }
 
 function RadioItem({ children, label, className, value, disabled }: RadioItemProps) {
+  const { t } = useI18n();
   return (
     <label className="flex items-center gap-2.5 text-sm">
       <Radio.Root
         value={value}
         disabled={disabled}
-        aria-label={label}
+        aria-label={t(label)}
         className={cn(
           "w-5 h-5 aspect-square rounded-full border-2",
           "border-mist-400 dark:border-mist-500",

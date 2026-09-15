@@ -1,6 +1,7 @@
 import { NumberField } from "@base-ui/react/number-field";
 import { Minus, Plus } from "lucide-react";
 
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 export interface NumberInputProps {
@@ -19,6 +20,7 @@ export interface NumberInputProps {
 
 export default function NumberInput(props: NumberInputProps) {
   const { label, name, description } = props;
+  const { t } = useI18n();
 
   return (
     // `name` belongs on the Root, not the Input. The Input is a text field that
@@ -41,7 +43,7 @@ export default function NumberInput(props: NumberInputProps) {
         <NumberField.ScrubArea>
           <label className={cn("text-sm font-medium", "text-mist-700 dark:text-mist-200")}>
             <NumberField.ScrubAreaCursor />
-            {label}
+            {t(label)}
           </label>
         </NumberField.ScrubArea>
       )}
@@ -55,15 +57,15 @@ export default function NumberInput(props: NumberInputProps) {
         )}
       >
         <NumberField.Input className="w-full rounded-l-md bg-transparent py-2 pl-3 text-sm focus:outline-hidden" />
-        <NumberField.Decrement aria-label="Decrement" className="h-7.5 w-7.5 rounded-lg p-1">
+        <NumberField.Decrement aria-label={t("Decrement")} className="h-7.5 w-7.5 rounded-lg p-1">
           <Minus className="h-4 w-4" />
         </NumberField.Decrement>
-        <NumberField.Increment aria-label="Increment" className="h-7.5 w-7.5 rounded-lg p-1">
+        <NumberField.Increment aria-label={t("Increment")} className="h-7.5 w-7.5 rounded-lg p-1">
           <Plus className="h-4 w-4" />
         </NumberField.Increment>
       </NumberField.Group>
       {description && (
-        <div className={cn("text-xs", "text-mist-500 dark:text-mist-400")}>{description}</div>
+        <div className={cn("text-xs", "text-mist-500 dark:text-mist-400")}>{t(description)}</div>
       )}
     </NumberField.Root>
   );
