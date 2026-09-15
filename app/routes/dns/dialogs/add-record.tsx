@@ -8,6 +8,7 @@ import Select from "~/components/select";
 import Text from "~/components/text";
 import Title from "~/components/title";
 import { useForm } from "~/hooks/use-form";
+import { useI18n } from "~/i18n";
 
 const recordSchema = type({
   record_type: "'A' | 'AAAA'",
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export default function AddRecord({ records }: Props) {
+  const { t } = useI18n();
   const form = useForm({
     schema: recordSchema,
     defaultValues: { record_type: "A" },
@@ -48,10 +50,10 @@ export default function AddRecord({ records }: Props) {
 
   return (
     <Dialog>
-      <Button>Add DNS record</Button>
+      <Button>{t("Add DNS record")}</Button>
       <DialogPanel onSubmit={() => form.reset()}>
-        <Title>Add DNS record</Title>
-        <Text>Enter the domain and IP address for the new DNS record.</Text>
+        <Title>{t("Add DNS record")}</Title>
+        <Text>{t("Enter the domain and IP address for the new DNS record.")}</Text>
         <div className="mt-4 flex flex-col gap-2">
           <input type="hidden" name="action_id" value="add_record" />
           <Select
@@ -81,8 +83,8 @@ export default function AddRecord({ records }: Props) {
           />
           {isDuplicate ? (
             <p className="text-sm opacity-50">
-              A record with the domain name <Code>{name}</Code> and IP address <Code>{ip}</Code>{" "}
-              already exists.
+              {t("A record with the domain name")} <Code>{name}</Code> {t("and IP address")}{" "}
+              <Code>{ip}</Code> {t("already exists.")}
             </p>
           ) : undefined}
         </div>

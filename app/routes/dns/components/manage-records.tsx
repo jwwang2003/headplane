@@ -4,6 +4,7 @@ import Button from "~/components/button";
 import Code from "~/components/code";
 import Link from "~/components/link";
 import TableList from "~/components/table-list";
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 import AddRecord from "../dialogs/add-record";
@@ -14,21 +15,22 @@ interface Props {
 }
 
 export default function ManageRecords({ records, isDisabled }: Props) {
+  const { t } = useI18n();
   return (
     <div className="flex w-full flex-col sm:w-2/3">
-      <h1 className="mb-4 text-2xl font-medium">DNS Records</h1>
+      <h1 className="mb-4 text-2xl font-medium">{t("DNS Records")}</h1>
       <p>
-        Headscale supports adding custom DNS records to your Tailnet. As of now, only <Code>A</Code>{" "}
-        and <Code>AAAA</Code> records are supported.{" "}
+        {t("Headscale supports adding custom DNS records to your Tailnet. As of now, only")}{" "}
+        <Code>A</Code> {t("and")} <Code>AAAA</Code> {t("records are supported.")}{" "}
         <Link external styled to="https://headscale.net/stable/ref/dns">
-          Learn More
+          {t("Learn More")}
         </Link>
       </p>
       <div className="mt-4">
         <TableList className="mb-8">
           {records.length === 0 ? (
             <TableList.Item>
-              <p className="mx-auto opacity-50">No DNS records found</p>
+              <p className="mx-auto opacity-50">{t("No DNS records found")}</p>
             </TableList.Item>
           ) : (
             records.map((record) => (
@@ -58,7 +60,7 @@ export default function ManageRecords({ records, isDisabled }: Props) {
                     disabled={isDisabled}
                     type="submit"
                   >
-                    Remove
+                    {t("Remove")}
                   </Button>
                 </Form>
               </TableList.Item>
