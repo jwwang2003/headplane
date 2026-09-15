@@ -15,6 +15,7 @@ import { NavLink, unstable_useRoute as useRoute, useLocation, useSubmit } from "
 
 import Link from "~/components/link";
 import { Menu, MenuContent, MenuItem, MenuSeparator, MenuTrigger } from "~/components/menu";
+import { useI18n } from "~/i18n";
 import logoBg from "~/logo/dark-bg.svg";
 import logoDark from "~/logo/dark.svg";
 import logoLight from "~/logo/light.svg";
@@ -60,6 +61,7 @@ const colorSchemes = [
 
 export default function Header({ user, access, configAvailable }: HeaderProps) {
   const submit = useSubmit();
+  const { t } = useI18n();
   const showTabs = access.ui;
   const rootRoute = useRoute("root");
   const currentColorScheme: ColorScheme = rootRoute?.loaderData?.colorScheme ?? "system";
@@ -110,7 +112,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
                     to={tab.to}
                   >
                     <tab.icon className="w-4" />
-                    {tab.label}
+                    {t(tab.label)}
                   </NavLink>
                 );
               })}
@@ -125,7 +127,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
             <MenuContent align="end">
               <MenuItem>
                 <Link external to="https://headplane.net">
-                  Docs
+                  {t("Docs")}
                 </Link>
               </MenuItem>
               <MenuItem>
@@ -135,7 +137,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
               </MenuItem>
               <MenuItem>
                 <Link external to="https://tailscale.com/download">
-                  Download
+                  {t("Download")}
                 </Link>
               </MenuItem>
             </MenuContent>
@@ -153,7 +155,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
                 <div className="text-mist-900 dark:text-mist-50">
                   {user.subject === "api_key" ? (
                     <>
-                      <p className="font-bold">API Key</p>
+                      <p className="font-bold">{t("API Key")}</p>
                       <p>{user.name}</p>
                     </>
                   ) : (
@@ -177,7 +179,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
                 >
                   <div className="flex items-center gap-x-2">
                     <Icon className="size-4" />
-                    <span className="flex-1">{label}</span>
+                    <span className="flex-1">{t(label)}</span>
                     {currentColorScheme === value && <Check className="size-4" />}
                   </div>
                 </MenuItem>
@@ -187,7 +189,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
                 variant="danger"
                 onClick={() => submit({}, { action: "/logout", method: "POST" })}
               >
-                Logout
+                {t("Logout")}
               </MenuItem>
             </MenuContent>
           </Menu>
@@ -218,7 +220,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
                   to={tab.to}
                 >
                   <tab.icon className="w-4" />
-                  {tab.label}
+                  {t(tab.label)}
                 </NavLink>
               );
             })}
