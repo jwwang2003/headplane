@@ -8,6 +8,7 @@ import {
   unstable_useRoute as useRoute,
 } from "react-router";
 
+import { getLocale, I18nProvider } from "~/i18n";
 import { LiveDataProvider } from "~/utils/live-data";
 import ToastProvider from "~/utils/toast-provider";
 
@@ -28,7 +29,7 @@ export const meta: MetaFunction = () => [
 
 export async function loader({ request }: Route.LoaderArgs) {
   const colorScheme = await getColorScheme(request);
-  return { colorScheme };
+  return { colorScheme, locale: getLocale(request) };
 }
 
 export function Layout({ children }: { readonly children: React.ReactNode }) {
@@ -40,7 +41,7 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
   return (
     <LiveDataProvider>
       <html
-        lang="en"
+        lang={loaderData?.locale ?? "en"}
         className={
           loaderData?.colorScheme === "dark"
             ? "dark"
@@ -57,8 +58,10 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
           <link href={`${__PREFIX__}/favicon.ico`} rel="icon" />
         </head>
         <body className="w-full overflow-x-hidden overscroll-none dark:bg-mist-900 dark:text-mist-50">
-          {children}
-          <ToastProvider />
+          <I18nProvider initialLocale={loaderData?.locale ?? "en"}>
+            {children}
+            <ToastProvider />
+          </I18nProvider>
           <ScrollRestoration />
           <Scripts />
         </body>
