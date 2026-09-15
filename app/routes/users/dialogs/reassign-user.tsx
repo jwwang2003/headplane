@@ -4,6 +4,7 @@ import Notice from "~/components/notice";
 import RadioGroup from "~/components/radio-group";
 import Text from "~/components/text";
 import Title from "~/components/title";
+import { useI18n } from "~/i18n";
 import { Roles } from "~/server/web/roles";
 import type { Role } from "~/server/web/roles";
 
@@ -22,19 +23,23 @@ export default function ReassignUser({
   isOpen,
   setIsOpen,
 }: ReassignProps) {
+  const { t } = useI18n();
   return (
     <Dialog isOpen={isOpen} onOpenChange={setIsOpen}>
       <DialogPanel variant={role === "owner" ? "unactionable" : "normal"}>
-        <Title>Change role for {displayName}?</Title>
+        <Title>
+          {t("Change role for")} {displayName}?
+        </Title>
         <Text className="mb-6">
-          Roles control what the user can access in Headplane. Each role grants a specific set of
-          capabilities.{" "}
+          {t(
+            "Roles control what the user can access in Headplane. Each role grants a specific set of capabilities.",
+          )}{" "}
           <Link external styled to="https://tailscale.com/kb/1138/user-roles">
-            Learn More
+            {t("Learn More")}
           </Link>
         </Text>
         {role === "owner" ? (
-          <Notice>The Tailnet owner cannot be reassigned.</Notice>
+          <Notice>{t("The Tailnet owner cannot be reassigned.")}</Notice>
         ) : (
           <>
             <input name="action_id" type="hidden" value="reassign_user" />
@@ -47,8 +52,8 @@ export default function ReassignUser({
                   return (
                     <RadioGroup.Radio key={r} label={name} value={r}>
                       <div className="block">
-                        <p className="font-bold">{name}</p>
-                        <p className="opacity-70">{desc}</p>
+                        <p className="font-bold">{t(name)}</p>
+                        <p className="opacity-70">{t(desc)}</p>
                       </div>
                     </RadioGroup.Radio>
                   );

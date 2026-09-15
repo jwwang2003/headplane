@@ -2,6 +2,7 @@ import { Ellipsis } from "lucide-react";
 import { useState } from "react";
 
 import { Menu, MenuContent, MenuItem, MenuSeparator, MenuTrigger } from "~/components/menu";
+import { useI18n } from "~/i18n";
 
 import Delete from "../dialogs/delete-user";
 import LinkUser from "../dialogs/link-user";
@@ -27,6 +28,7 @@ export default function UserMenu({
   isOwner,
 }: MenuProps) {
   const [modal, setModal] = useState<Modal>(null);
+  const { t } = useI18n();
 
   const isLinked = currentLink !== undefined;
   const disabledKeys: string[] = [];
@@ -94,16 +96,16 @@ export default function UserMenu({
             disabled={disabledKeys.includes("reassign")}
             onClick={() => setModal("reassign")}
           >
-            Change role
+            {t("Change role")}
           </MenuItem>
           <MenuItem onClick={() => setModal("link")}>
-            {isLinked ? "Change linked user" : "Link Headscale user"}
+            {isLinked ? t("Change linked user") : t("Link Headscale user")}
           </MenuItem>
           {isOwner && !isSelf && (
             <>
               <MenuSeparator />
               <MenuItem variant="danger" onClick={() => setModal("transfer")}>
-                Transfer ownership
+                {t("Transfer ownership")}
               </MenuItem>
             </>
           )}
@@ -111,7 +113,7 @@ export default function UserMenu({
             <>
               <MenuSeparator />
               <MenuItem variant="danger" onClick={() => setModal("delete")}>
-                Delete
+                {t("Delete")}
               </MenuItem>
             </>
           )}

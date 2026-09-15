@@ -1,6 +1,7 @@
 import { CircleUser } from "lucide-react";
 
 import StatusCircle from "~/components/status-circle";
+import { useI18n } from "~/i18n";
 import cn from "~/utils/cn";
 
 import type { UnlinkedHeadscaleUser } from "../overview";
@@ -13,6 +14,7 @@ interface HeadscaleUserRowProps {
 
 export default function HeadscaleUserRow({ user, writable }: HeadscaleUserRowProps) {
   const isOnline = user.machines.some((machine) => machine.online);
+  const { t, formatDate, formatDateTime } = useI18n();
   const lastSeen = user.machines.reduce(
     (acc, machine) => Math.max(acc, new Date(machine.lastSeen).getTime()),
     0,
@@ -39,7 +41,7 @@ export default function HeadscaleUserRow({ user, writable }: HeadscaleUserRowPro
       </td>
       <td className="py-2 pl-0.5">
         <p className="text-sm text-mist-600 dark:text-mist-300" suppressHydrationWarning>
-          {new Date(user.createdAt).toLocaleDateString()}
+          {formatDate(user.createdAt)}
         </p>
       </td>
       <td className="py-2 pl-0.5">
@@ -48,12 +50,10 @@ export default function HeadscaleUserRow({ user, writable }: HeadscaleUserRowPro
             className={cn("flex items-center gap-x-1 text-sm", "text-mist-600 dark:text-mist-300")}
           >
             <StatusCircle className="h-4 w-4" isOnline={isOnline} />
-            <p suppressHydrationWarning>
-              {isOnline ? "Connected" : new Date(lastSeen).toLocaleString()}
-            </p>
+            <p suppressHydrationWarning>{isOnline ? t("Connected") : formatDateTime(lastSeen)}</p>
           </span>
         ) : (
-          <p className="text-sm text-mist-600 dark:text-mist-300">No machines</p>
+          <p className="text-sm text-mist-600 dark:text-mist-300">{t("No machines")}</p>
         )}
       </td>
       <td className="py-2 pr-0.5">{writable ? <HeadscaleUserMenu user={user} /> : null}</td>
