@@ -2,7 +2,7 @@ import { Outlet, redirect, type ShouldRevalidateFunction } from "react-router";
 
 import { ErrorBanner } from "~/components/error-banner";
 import StatusBanner from "~/components/status-banner";
-import { useI18n } from "~/i18n";
+import { FloatingLanguageSwitcher, useI18n } from "~/i18n";
 import {
   appConfigContext,
   authContext,
@@ -149,6 +149,7 @@ export default function AppLayout({ loaderData }: Route.ComponentProps) {
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   return (
     <div className="mx-auto my-24 w-fit overscroll-contain">
+      <FloatingLanguageSwitcher />
       <ErrorBanner className="max-w-2xl" error={error} />
     </div>
   );

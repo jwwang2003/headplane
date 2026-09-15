@@ -15,7 +15,7 @@ import { NavLink, unstable_useRoute as useRoute, useLocation, useSubmit } from "
 
 import Link from "~/components/link";
 import { Menu, MenuContent, MenuItem, MenuSeparator, MenuTrigger } from "~/components/menu";
-import { useI18n } from "~/i18n";
+import { LanguageSwitcher, useI18n } from "~/i18n";
 import logoBg from "~/logo/dark-bg.svg";
 import logoDark from "~/logo/dark.svg";
 import logoLight from "~/logo/light.svg";
@@ -119,7 +119,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
             </nav>
           )}
         </div>
-        <div className="ml-auto grid shrink-0 grid-cols-2 gap-x-4">
+        <div className="ml-auto flex shrink-0 items-center gap-x-2 sm:gap-x-4">
           <Menu>
             <MenuTrigger className="size-8 rounded-full p-1">
               <CircleQuestionMark className="w-5" />
@@ -142,6 +142,7 @@ export default function Header({ user, access, configAvailable }: HeaderProps) {
               </MenuItem>
             </MenuContent>
           </Menu>
+          <LanguageSwitcher />
           <Menu>
             <MenuTrigger className="size-8 overflow-hidden rounded-full">
               {user.picture ? (

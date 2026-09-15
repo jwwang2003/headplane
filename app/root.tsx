@@ -6,9 +6,10 @@ import {
   Scripts,
   ScrollRestoration,
   unstable_useRoute as useRoute,
+  useMatches,
 } from "react-router";
 
-import { getLocale, I18nProvider } from "~/i18n";
+import { FloatingLanguageSwitcher, getLocale, I18nProvider } from "~/i18n";
 import { LiveDataProvider } from "~/utils/live-data";
 import ToastProvider from "~/utils/toast-provider";
 
@@ -34,6 +35,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export function Layout({ children }: { readonly children: React.ReactNode }) {
   const { loaderData } = useRoute("root");
+  const hasAppLayout = useMatches().some((match) => match.id === "layout/app");
 
   // LiveDataProvider is wrapped at the top level since dialogs and things
   // that control its state are usually open in portal containers which
@@ -60,6 +62,7 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
         <body className="w-full overflow-x-hidden overscroll-none dark:bg-mist-900 dark:text-mist-50">
           <I18nProvider initialLocale={loaderData?.locale ?? "en"}>
             {children}
+            {!hasAppLayout && <FloatingLanguageSwitcher />}
             <ToastProvider />
           </I18nProvider>
           <ScrollRestoration />
@@ -71,8 +74,10 @@ export function Layout({ children }: { readonly children: React.ReactNode }) {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const hasAppLayout = useMatches().some((match) => match.id === "layout/app");
   return (
     <div className="flex h-screen w-screen items-center justify-center p-4">
+      {hasAppLayout && <FloatingLanguageSwitcher />}
       <ErrorBanner className="max-w-2xl" error={error} />
     </div>
   );
