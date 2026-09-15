@@ -7,6 +7,7 @@ import Input from "~/components/input";
 import Link from "~/components/link";
 import PageError from "~/components/page-error";
 import Tooltip from "~/components/tooltip";
+import { useI18n } from "~/i18n";
 import {
   agentsContext,
   appConfigContext,
@@ -112,6 +113,7 @@ const ROUTE_MATCH: Record<string, (n: PopulatedNode) => boolean> = {
 
 export default function Page({ loaderData }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { t } = useI18n();
   const [sortField, setSortField] = useState<SortField>("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
@@ -235,11 +237,11 @@ export default function Page({ loaderData }: Route.ComponentProps) {
     <>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col">
-          <h1 className="mb-2 text-2xl font-medium">Machines</h1>
+          <h1 className="mb-2 text-2xl font-medium">{t("Machines")}</h1>
           <p>
-            Manage the devices connected to your Tailnet.{" "}
+            {t("Manage the devices connected to your Tailnet.")}{" "}
             <Link external styled to="https://tailscale.com/kb/1372/manage-devices">
-              Learn more
+              {t("Learn more")}
             </Link>
           </p>
         </div>
@@ -257,12 +259,12 @@ export default function Page({ loaderData }: Route.ComponentProps) {
             labelHidden
             maxLength={100}
             onChange={setSearchQuery}
-            placeholder="Search by name or IP address..."
+            placeholder={t("Search by name or IP address...")}
             value={searchQuery}
           />
           {searchQuery && (
             <button
-              aria-label="Clear search"
+              aria-label={t("Clear search")}
               className={cn(
                 "absolute right-2 top-1/2 -translate-y-1/2",
                 "p-1 rounded-full",
@@ -280,8 +282,11 @@ export default function Page({ loaderData }: Route.ComponentProps) {
         <MachineFilters users={loaderData.users} populatedNodes={loaderData.populatedNodes} />
         <span className="ml-auto text-sm whitespace-nowrap text-mist-500">
           {searchQuery || hasActiveFilters
-            ? `Showing ${filteredAndSortedNodes.length} of ${loaderData.populatedNodes.length} machines`
-            : `${loaderData.populatedNodes.length} machines`}
+            ? t("Showing {shown} of {total} machines", {
+                shown: filteredAndSortedNodes.length,
+                total: loaderData.populatedNodes.length,
+              })
+            : t("{count} machines", { count: loaderData.populatedNodes.length })}
         </span>
       </div>
       <div className="overflow-x-auto">
@@ -299,7 +304,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                 className="pb-2 text-xs font-bold uppercase"
               >
                 <button
-                  aria-label="Sort by name"
+                  aria-label={t("Sort by name")}
                   className={cn(
                     "flex items-center gap-x-1 cursor-pointer",
                     "hover:text-mist-900 dark:hover:text-mist-100",
@@ -307,7 +312,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                   onClick={() => handleSort("name")}
                   type="button"
                 >
-                  Name
+                  {t("Name")}
                   {sortField === "name" &&
                     (sortDirection === "asc" ? (
                       <ChevronUp className="h-3 w-3" />
@@ -328,7 +333,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
               >
                 <div className="flex items-center gap-x-1">
                   <button
-                    aria-label="Sort by IP address"
+                    aria-label={t("Sort by IP address")}
                     className={cn(
                       "flex items-center gap-x-1 cursor-pointer uppercase text-xs font-bold",
                       "hover:text-mist-900 dark:hover:text-mist-100",
@@ -336,7 +341,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                     onClick={() => handleSort("ip")}
                     type="button"
                   >
-                    Addresses
+                    {t("Addresses")}
                     {sortField === "ip" &&
                       (sortDirection === "asc" ? (
                         <ChevronUp className="h-3 w-3" />
@@ -348,8 +353,9 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                     <Tooltip
                       content={
                         <span className="font-normal">
-                          Since MagicDNS is enabled, you can access devices based on their name and
-                          also at{" "}
+                          {t(
+                            "Since MagicDNS is enabled, you can access devices based on their name and also at",
+                          )}{" "}
                           <Code>
                             [name].
                             {loaderData.magic}
@@ -375,7 +381,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                   className="pb-2 text-xs font-bold uppercase"
                 >
                   <button
-                    aria-label="Sort by version"
+                    aria-label={t("Sort by version")}
                     className={cn(
                       "flex items-center gap-x-1 cursor-pointer",
                       "hover:text-mist-900 dark:hover:text-mist-100",
@@ -383,7 +389,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                     onClick={() => handleSort("version")}
                     type="button"
                   >
-                    Version
+                    {t("Version")}
                     {sortField === "version" &&
                       (sortDirection === "asc" ? (
                         <ChevronUp className="h-3 w-3" />
@@ -404,7 +410,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                 className="pb-2 text-xs font-bold uppercase"
               >
                 <button
-                  aria-label="Sort by last seen"
+                  aria-label={t("Sort by last seen")}
                   className={cn(
                     "flex items-center gap-x-1 cursor-pointer",
                     "hover:text-mist-900 dark:hover:text-mist-100",
@@ -412,7 +418,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                   onClick={() => handleSort("lastSeen")}
                   type="button"
                 >
-                  Last Seen
+                  {t("Last Seen")}
                   {sortField === "lastSeen" &&
                     (sortDirection === "asc" ? (
                       <ChevronUp className="h-3 w-3" />
@@ -422,7 +428,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                 </button>
               </th>
               <th className="w-12 pb-2">
-                <span className="sr-only">Actions</span>
+                <span className="sr-only">{t("Actions")}</span>
               </th>
             </tr>
           </thead>
@@ -438,7 +444,7 @@ export default function Page({ loaderData }: Route.ComponentProps) {
                   className="py-8 text-center text-mist-500"
                   colSpan={loaderData.agent !== undefined ? 6 : 5}
                 >
-                  No machines match the current filters
+                  {t("No machines match the current filters")}
                 </td>
               </tr>
             ) : (

@@ -9,6 +9,7 @@ import Link from "~/components/link";
 import TableList from "~/components/table-list";
 import Text from "~/components/text";
 import Title from "~/components/title";
+import { useI18n } from "~/i18n";
 import type { Machine } from "~/types";
 import cn from "~/utils/cn";
 
@@ -21,6 +22,7 @@ interface TagsProps {
 
 export default function Tags({ machine, isOpen, setIsOpen, existingTags }: TagsProps) {
   const fetcher = useFetcher();
+  const { t } = useI18n();
   const submittingRef = useRef(false);
   const [tags, setTags] = useState([...machine.tags]);
   const [tag, setTag] = useState("tag:");
@@ -74,13 +76,15 @@ export default function Tags({ machine, isOpen, setIsOpen, existingTags }: TagsP
         }}
         isDisabled={fetcher.state !== "idle"}
       >
-        <Title>Edit ACL tags for {machine.givenName}</Title>
+        <Title>
+          {t("Edit ACL tags for")} {machine.givenName}
+        </Title>
         <Text>
-          ACL tags can be used to reference machines in your ACL policies. See the{" "}
+          {t("ACL tags can be used to reference machines in your ACL policies. See the")}{" "}
           <Link external styled to="https://tailscale.com/kb/1068/acl-tags">
-            Tailscale documentation
+            {t("Tailscale documentation")}
           </Link>{" "}
-          for more information.
+          {t("for more information.")}
         </Text>
         {error ? (
           <p className="mt-2 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
@@ -91,7 +95,7 @@ export default function Tags({ machine, isOpen, setIsOpen, existingTags }: TagsP
           {tags.length === 0 ? (
             <TableList.Item className="flex flex-col items-center gap-2.5 py-4 opacity-70">
               <TagsIcon />
-              <p className="font-semibold">No tags are set on this machine</p>
+              <p className="font-semibold">{t("No tags are set on this machine")}</p>
             </TableList.Item>
           ) : (
             tags.map((item) => (
@@ -113,7 +117,7 @@ export default function Tags({ machine, isOpen, setIsOpen, existingTags }: TagsP
 
         <div className="mt-2 flex items-center gap-2">
           <Input
-            aria-label="Add a tag"
+            aria-label={t("Add a tag")}
             className="w-full"
             value={tag}
             onChange={setTag}
@@ -150,8 +154,9 @@ export default function Tags({ machine, isOpen, setIsOpen, existingTags }: TagsP
           </div>
         ) : null}
         <p className="mt-2 text-sm opacity-50">
-          Not seeing the tags you expect? Tags need to be defined in your access control policy
-          before they can be assigned to machines.
+          {t(
+            "Not seeing the tags you expect? Tags need to be defined in your access control policy before they can be assigned to machines.",
+          )}
         </p>
       </DialogPanel>
     </Dialog>

@@ -9,6 +9,7 @@ import Chip from "~/components/chip";
 import Link from "~/components/link";
 import StatusCircle from "~/components/status-circle";
 import Tooltip from "~/components/tooltip";
+import { useI18n } from "~/i18n";
 import {
   agentsContext,
   headscaleConfigContext,
@@ -105,6 +106,7 @@ export default function Page({
   },
 }: Route.ComponentProps) {
   const [showRouting, setShowRouting] = useState(false);
+  const { t, formatDateTime, yesNo } = useI18n();
 
   const uiTags = useMemo(() => {
     const tags = uiTagsForNode(node, agent?.nodeKey === node.nodeKey);
@@ -115,7 +117,7 @@ export default function Page({
     <div>
       <p className="text-md mb-8">
         <Link className="font-medium" to="/machines">
-          All Machines
+          {t("All Machines")}
         </Link>
         <span className="mx-2">/</span>
         {node.givenName}
@@ -143,18 +145,18 @@ export default function Page({
       <div className="mb-4 flex gap-1">
         <div className="border-r border-mist-100 p-2 pr-4 dark:border-mist-800">
           <span className="flex items-center gap-x-1 text-sm text-mist-600 dark:text-mist-300">
-            Managed by
+            {t("Managed by")}
             <Tooltip content="By default, a machine’s permissions match its creator’s.">
               <Info className="p-1" />
             </Tooltip>
           </span>
           <div className="mt-1 flex items-center gap-x-2.5">
             <UserCircle />
-            {node.user ? getUserDisplayName(node.user) : "Tag-owned"}
+            {node.user ? getUserDisplayName(node.user) : t("Tag-owned")}
           </div>
         </div>
         <div className="p-2 pl-4">
-          <p className="text-sm text-mist-600 dark:text-mist-300">Status</p>
+          <p className="text-sm text-mist-600 dark:text-mist-300">{t("Status")}</p>
           <div className="mt-1 mb-8 flex gap-1">
             {mapTagsToComponents(node, uiTags)}
             {tags.map((tag) => (
@@ -164,15 +166,15 @@ export default function Page({
         </div>
       </div>
       <Routes isOpen={showRouting} node={node} setIsOpen={setShowRouting} />
-      <h2 className="mt-8 text-xl font-medium">Subnets & Routing</h2>
+      <h2 className="mt-8 text-xl font-medium">{t("Subnets & Routing")}</h2>
       <div className="mb-4 flex items-center justify-between">
         <p>
-          Subnets let you expose physical network routes onto Tailscale.{" "}
+          {t("Subnets let you expose physical network routes onto Tailscale.")}{" "}
           <Link external styled to="https://tailscale.com/kb/1019/subnets">
-            Learn More
+            {t("Learn More")}
           </Link>
         </p>
-        <Button onClick={() => setShowRouting(true)}>Review</Button>
+        <Button onClick={() => setShowRouting(true)}>{t("Review")}</Button>
       </div>
       <Card
         className={cn(
@@ -183,7 +185,7 @@ export default function Page({
       >
         <div>
           <span className="flex items-center gap-x-1 text-mist-600 dark:text-mist-300">
-            Approved
+            {t("Approved")}
             <Tooltip content="Traffic to these routes are being routed through this machine.">
               <Info className="h-3.5 w-3.5" />
             </Tooltip>
@@ -204,12 +206,12 @@ export default function Page({
             onClick={() => setShowRouting(true)}
             variant="ghost"
           >
-            Edit
+            {t("Edit")}
           </Button>
         </div>
         <div>
           <span className="flex items-center gap-x-1 text-mist-600 dark:text-mist-300">
-            Awaiting Approval
+            {t("Awaiting Approval")}
             <Tooltip content="This machine is advertising these routes, but they must be approved before traffic will be routed to them.">
               <Info className="h-3.5 w-3.5" />
             </Tooltip>
@@ -230,12 +232,12 @@ export default function Page({
             onClick={() => setShowRouting(true)}
             variant="ghost"
           >
-            Edit
+            {t("Edit")}
           </Button>
         </div>
         <div>
           <span className="flex items-center gap-x-1 text-mist-600 dark:text-mist-300">
-            Exit Node
+            {t("Exit Node")}
             <Tooltip content="Whether this machine can act as an exit node for your tailnet.">
               <Info className="h-3.5 w-3.5" />
             </Tooltip>
@@ -246,12 +248,12 @@ export default function Page({
             ) : node.customRouting.exitApproved ? (
               <span className="flex items-center gap-x-1">
                 <CheckCircle className="h-3.5 w-3.5 text-green-700" />
-                Allowed
+                {t("Allowed")}
               </span>
             ) : (
               <span className="flex items-center gap-x-1">
                 <CircleSlash className="h-3.5 w-3.5 text-red-700" />
-                Awaiting Approval
+                {t("Awaiting Approval")}
               </span>
             )}
           </div>
@@ -260,13 +262,13 @@ export default function Page({
             onClick={() => setShowRouting(true)}
             variant="ghost"
           >
-            Edit
+            {t("Edit")}
           </Button>
         </div>
       </Card>
-      <h2 className="text-xl font-medium">Machine Details</h2>
+      <h2 className="text-xl font-medium">{t("Machine Details")}</h2>
       <p className="mb-4">
-        Information about this machine’s network. Used to debug connection issues.
+        {t("Information about this machine’s network. Used to debug connection issues.")}
       </p>
       <Card
         className="grid w-full max-w-full grid-cols-1 gap-y-2 sm:gap-x-12 lg:grid-cols-2"
@@ -275,7 +277,7 @@ export default function Page({
         <div className="flex flex-col gap-1">
           <Attribute
             name="Creator"
-            value={node.user ? getUserDisplayName(node.user) : "Tag-owned"}
+            value={node.user ? getUserDisplayName(node.user) : t("Tag-owned")}
           />
           <Attribute name="Machine name" value={node.givenName} />
           <Attribute
@@ -300,14 +302,14 @@ export default function Page({
             tooltip="Public key which uniquely identifies this machine."
             value={node.nodeKey}
           />
-          <Attribute name="Created" value={new Date(node.createdAt).toLocaleString()} />
+          <Attribute name="Created" value={formatDateTime(node.createdAt)} />
           <Attribute
             name="Last Seen"
-            value={node.online ? "Connected" : new Date(node.lastSeen).toLocaleString()}
+            value={node.online ? t("Connected") : formatDateTime(node.lastSeen)}
           />
           <Attribute
             name="Key expiry"
-            value={!isNoExpiry(node.expiry) ? new Date(node.expiry!).toLocaleString() : "Never"}
+            value={!isNoExpiry(node.expiry) ? formatDateTime(node.expiry!) : t("Never")}
           />
           {magic ? (
             <Attribute isCopyable name="Domain" value={`${node.givenName}.${magic}`} />
@@ -315,7 +317,7 @@ export default function Page({
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm font-semibold text-mist-600 uppercase dark:text-mist-300">
-            Addresses
+            {t("Addresses")}
           </p>
           <Attribute
             isCopyable
@@ -349,23 +351,23 @@ export default function Page({
           {stats ? (
             <>
               <p className="mt-4 text-sm font-semibold text-mist-600 uppercase dark:text-mist-300">
-                Client Connectivity
+                {t("Client Connectivity")}
               </p>
               <Attribute
                 name="Varies"
                 tooltip="Whether the machine is behind a difficult NAT that varies the machine’s IP address depending on the destination."
-                value={stats.NetInfo?.MappingVariesByDestIP ? "Yes" : "No"}
+                value={yesNo(stats.NetInfo?.MappingVariesByDestIP)}
               />
               <Attribute
                 name="Hairpinning"
                 tooltip="Whether the machine needs to traverse NATs with hairpinning."
-                value={stats.NetInfo?.HairPinning ? "Yes" : "No"}
+                value={yesNo(stats.NetInfo?.HairPinning)}
               />
-              <Attribute name="IPv6" value={stats.NetInfo?.WorkingIPv6 ? "Yes" : "No"} />
-              <Attribute name="UDP" value={stats.NetInfo?.WorkingUDP ? "Yes" : "No"} />
-              <Attribute name="UPnP" value={stats.NetInfo?.UPnP ? "Yes" : "No"} />
-              <Attribute name="PCP" value={stats.NetInfo?.PCP ? "Yes" : "No"} />
-              <Attribute name="NAT-PMP" value={stats.NetInfo?.PMP ? "Yes" : "No"} />
+              <Attribute name="IPv6" value={yesNo(stats.NetInfo?.WorkingIPv6)} />
+              <Attribute name="UDP" value={yesNo(stats.NetInfo?.WorkingUDP)} />
+              <Attribute name="UPnP" value={yesNo(stats.NetInfo?.UPnP)} />
+              <Attribute name="PCP" value={yesNo(stats.NetInfo?.PCP)} />
+              <Attribute name="NAT-PMP" value={yesNo(stats.NetInfo?.PMP)} />
             </>
           ) : undefined}
         </div>

@@ -10,11 +10,11 @@ import { ExpiryTag } from "~/components/tags/Expiry";
 import { HeadplaneAgentTag } from "~/components/tags/HeadplaneAgent";
 import { SubnetTag } from "~/components/tags/Subnet";
 import { TailscaleSSHTag } from "~/components/tags/TailscaleSSH";
+import { useI18n } from "~/i18n";
 import type { User } from "~/types";
 import cn from "~/utils/cn";
 import * as hinfo from "~/utils/host-info";
 import { isNoExpiry, type PopulatedNode } from "~/utils/node-info";
-import { formatTimeDelta } from "~/utils/time";
 import toast from "~/utils/toast";
 import { getUserDisplayName } from "~/utils/user";
 
@@ -42,6 +42,7 @@ export default function MachineRow({
   supportsDisablingKeyExpiry,
 }: Props) {
   const uiTags = useMemo(() => uiTagsForNode(node, isAgent), [node, isAgent]);
+  const { t, formatDateTime, formatRelativeTime } = useI18n();
 
   const ipOptions = useMemo(() => {
     if (magic) {
@@ -65,7 +66,7 @@ export default function MachineRow({
             {node.givenName}
           </p>
           <p className="text-sm opacity-50">
-            {node.user ? getUserDisplayName(node.user) : "Tag-owned"}
+            {node.user ? getUserDisplayName(node.user) : t("Tag-owned")}
           </p>
           <div className="mt-1.5 flex flex-wrap gap-1">
             {mapTagsToComponents(node, uiTags)}
@@ -114,7 +115,7 @@ export default function MachineRow({
               </p>
             </>
           ) : (
-            <p className="text-sm opacity-50">Unknown</p>
+            <p className="text-sm opacity-50">{t("Unknown")}</p>
           )}
         </td>
       ) : undefined}
@@ -126,13 +127,11 @@ export default function MachineRow({
               className={cn("text-sm", "text-mist-600 dark:text-mist-300")}
               suppressHydrationWarning
             >
-              {node.online && !node.expired
-                ? "Connected"
-                : new Date(node.lastSeen).toLocaleString()}
+              {node.online && !node.expired ? t("Connected") : formatDateTime(node.lastSeen)}
             </p>
             {!(node.online && !node.expired) && (
               <p className="text-xs opacity-50" suppressHydrationWarning>
-                {formatTimeDelta(new Date(node.lastSeen))}
+                {formatRelativeTime(new Date(node.lastSeen))}
               </p>
             )}
           </div>
